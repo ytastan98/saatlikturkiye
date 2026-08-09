@@ -1,90 +1,46 @@
 [
   {
-    "id": "1786291547_1",
+    "id": "1786291636_1",
     "category": "DÜNYA",
-    "title": "Suriye ve Rusya Anlaştı",
+    "title": "Suriye ve Rusya Anlaşmaya Vardı",
     "summary": "Suriye ve Rusya, Hmeymim ve Tartus için bir anlaşmaya vardı. Bu anlaşma, iki ülke arasındaki ilişkileri güçlendirecek.",
-    "fullText": "Suriye ve Rusya arasında varılan anlaşma, iki ülkenin savunma ve güvenlik alanındaki işbirliğini derinleştirecek. Anlaşma kapsamında, Suriye'de bulunan Rus askeri üsleri için belirli düzenlemeler yapılacak.",
+    "fullText": "Suriye ve Rusya arasında varılan anlaşma, bölgedeki stratejik öneme sahip Hmeymim ve Tartus bölgeleri için geçerli olacak.",
     "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a78a15fcb247560.jpg?w=1200&h=675",
     "source": "Ensonhaber",
     "sourceUrl": "https://www.ensonhaber.com/suriye-rusya-arasinda-hmeymim-ve-tartus-icin-anlasma-saglandi-h1556208",
-    "date": "09.08.2026 - 19:05"
+    "date": "09.08.2026 - 19:07"
   },
   {
-    "id": "1786291547_2",
-    "category": "SUÇ",
-    "title": "Aksaray'da Alacaklılar Öldü",
-    "summary": "Aksaray'da borçlunun evini basan iki alacaklı, hayatını kaybetti. Olay, borçlunun evinde meydana geldi.",
-    "fullText": "Aksaray'da borçlunun evini basan alacaklılar, bilinmeyen nedenlerle hayatını kaybetti. Olayla ilgili soruşturma başlatıldı.",
-    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a789e90254a0930.jpg?w=1200&h=675",
-    "source": "Ensonhaber",
-    "sourceUrl": "https://www.ensonhaber.com/aksarayda-borclunun-evini-basan-alacakli-iki-kisiyi-hayattan-kopardi-h1556207",
-    "date": "09.08.2026 - 19:05"
-  },
-  {
-    "id": "1786291547_3",
+    "id": "1786291636_2",
     "category": "SUÇ",
     "title": "İstanbul'da Suç Örgütü Üyesi Yakalandı",
-    "summary": "İstanbul'da bir suç örgütü üyesi, tırın gizli bölmesinde yakalandı. Operasyon, güvenlik güçleri tarafından gerçekleştirildi.",
-    "fullText": "İstanbul'da gerçekleştirilen operasyon kapsamında, bir suç örgütü üyesi tırın gizli bölmesinde yakalandı. Şüpheli, adli makamlara sevk edildi.",
+    "summary": "İstanbul'da bir suç örgütü üyesi, tırın gizli bölmesinde yakalandı. Bu operasyon, güvenlik güçlerinin başarılı bir çalışması olarak değerlendiriliyor.",
+    "fullText": "Suç örgütü üyesinin yakalanması, İstanbul'da suçla mücadele effortsının bir parçası olarak görülüyor.",
     "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a789484098f6159.jpg?w=1200&h=675",
     "source": "Ensonhaber",
     "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
-    "date": "09.08.2026 - 19:05"
+    "date": "09.08.2026 - 19:07"
   },
   {
-    "id": "1786291547_4",
-    "category": "DÜNYA",
-    "title": "Avusturya Şansölyesi Türkiye'yi Ziyaret Edecek",
-    "summary": "Avusturya Şansölyesi, yarın Türkiye'yi ziyaret edecek. Ziyaret, iki ülke arasındaki ilişkileri güçlendirecek.",
-    "fullText": "Avusturya Şansölyesi, yarın Türkiye'ye resmi bir ziyaret gerçekleştirecek. Ziyaret kapsamında, iki ülke arasındaki ekonomik ve siyasi ilişkiler ele alınacak.",
-    "imageUrl": "",
-    "source": "Anadolu Ajansı Güncel Haberler",
-    "sourceUrl": "https://www.aa.com.tr/tr/gundem/avusturya-sansolyesi-stocker-yarin-turkiyeyi-ziyaret-edecek/4022539",
-    "date": "09.08.2026 - 19:05"
-  },
-  {
-    "id": "1786291174_1",
-    "category": "DÜNYA",
-    "title": "Suriye ve Rusya Anlaştı",
-    "summary": "Suriye ve Rusya, Hmeymim ve Tartus için bir anlaşmaya vardı. Bu anlaşma, iki ülke arasındaki ilişkileri daha da güçlendirecek.",
-    "fullText": "Suriye ve Rusya arasında varılan anlaşma, iki ülkenin bölgedeki işbirliğini artıracak. Anlaşma kapsamında, Hmeymim ve Tartus bölgelerinde ortak faaliyetler yürütülecek.",
-    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a78a15fcb247560.jpg?w=1200&h=675",
-    "source": "Ensonhaber",
-    "sourceUrl": "https://www.ensonhaber.com/suriye-rusya-arasinda-hmeymim-ve-tartus-icin-anlasma-saglandi-h1556208",
-    "date": "09.08.2026 - 18:59"
-  },
-  {
-    "id": "1786291174_2",
-    "category": "SUÇ",
-    "title": "İstanbul'da Suç Örgütü Üyesi Yakalandı",
-    "summary": "İstanbul'da bir suç örgütü üyesi, tırın gizli bölmesinde yakalandı. Bu operasyon, İstanbul Emniyet Müdürlüğü tarafından yürütüldü.",
-    "fullText": "İstanbul Emniyet Müdürlüğü, bir dizi operasyon düzenleyerek suç örgütü üyelerini yakalamaya devam ediyor. Bu operasyonlar, şehrin güvenliğini artırmaya yönelik önemli adımlar.",
-    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a789484098f6159.jpg?w=1200&h=675",
-    "source": "Ensonhaber",
-    "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
-    "date": "09.08.2026 - 18:59"
-  },
-  {
-    "id": "1786291174_3",
+    "id": "1786291636_3",
     "category": "TRAFİK",
     "title": "Gökçeada'da Ölümlü Kaza",
-    "summary": "Gökçeada'da park halindeki bir otomobile çarpan motosikletteki iki kişi hayatını kaybetti. Kaza, trafik kazalarının önlenmesi için alınan önlemlerin önemini bir kez daha gösterdi.",
-    "fullText": "Trafik kazaları, her yıl birçok kişinin hayatını kaybetmesine neden oluyor. Bu kazaların önlenmesi için sürücülere daha dikkatli olmaları ve trafik kurallarına uymaları gerekiyor.",
+    "summary": "Gökçeada'da park halindeki bir otomobile çarpan motosikletteki iki kişi hayatını kaybetti. Kaza, trafik güvenliği konusunda endişe yaratıyor.",
+    "fullText": "Gökçeada'daki kaza, sürücülerin dikkatli olması gerektiğini bir kez daha gösterdi.",
     "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/canakkale-kaza-aa-2480762.jpg",
     "source": "TRT Haber Son Dakika Haberler",
     "sourceUrl": "https://www.trthaber.com/haber/turkiye/gokceadada-park-halindeki-otomobile-carpan-motosikletteki-2-kisi-oldu-953487.html",
-    "date": "09.08.2026 - 18:59"
+    "date": "09.08.2026 - 19:07"
   },
   {
-    "id": "1786291174_4",
-    "category": "DÜNYA",
-    "title": "Suriye ve Rusya Arasında Anlaşma",
-    "summary": "Suriye, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardı. Bu anlaşma, iki ülke arasındaki ilişkileri daha da güçlendirecek.",
-    "fullText": "Suriye ve Rusya arasındaki anlaşma, bölgedeki güç dengesini etkileyecek. Anlaşma, iki ülkenin ortak çıkarlarına hizmet edecek şekilde düzenlendi.",
-    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/suriye-re-2480760.jpg",
-    "source": "TRT Haber Son Dakika Haberler",
-    "sourceUrl": "https://www.trthaber.com/haber/dunya/suriye-topraklarindaki-rus-usleri-icin-moskova-ile-anlasmaya-vardigini-acikladi-953483.html",
-    "date": "09.08.2026 - 18:59"
+    "id": "1786291636_4",
+    "category": "GÜNDEM",
+    "title": "Avusturya Şansölyesi Türkiye'yi Ziyaret Edecek",
+    "summary": "Avusturya Şansölyesi, yarın Türkiye'yi ziyaret edecek. Bu ziyaret, iki ülke arasındaki ilişkilerin güçlendirilmesi açısından önemli görülüyor.",
+    "fullText": "Avusturya Şansölyesi'nin ziyareti, Türkiye ve Avusturya arasındaki ekonomik ve siyasi işbirliğini derinleştirecek.",
+    "imageUrl": "",
+    "source": "Anadolu Ajansı Güncel Haberler",
+    "sourceUrl": "https://www.aa.com.tr/tr/gundem/avusturya-sansolyesi-stocker-yarin-turkiyeyi-ziyaret-edecek/4022539",
+    "date": "09.08.2026 - 19:07"
   }
 ]
