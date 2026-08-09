@@ -1,1 +1,258 @@
-[]
+[
+  {
+    "id": "1786288660_1",
+    "category": "SUÇ",
+    "title": "Tırın Gizli Bölmesinde Suç Örgütü Üyesi Yakalandı",
+    "summary": "İstanbul'da yapılan operasyon kapsamında bir tırın gizli bölmesinde suç örgütü üyesi yakalandı. Yakalanan şahıs hakkında gerekli işlemler yapıldıktan sonra adli mercilere sevk edildi.",
+    "fullText": "İstanbul Emniyet Müdürlüğü tarafından yapılan operasyon sonucunda, bir tırın gizli bölmesinde suç örgütü üyesi yakalandı. Operasyon, güvenlik güçlerinin uzun süredir devam eden çalışmalarının ardından gerçekleşti.",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
+    "date": "09.08.2026 - 18:17"
+  },
+  {
+    "id": "1786288660_2",
+    "category": "SUÇ",
+    "title": "Uyuşturucu Operasyonunda 117 Kök Hint Keneviri Ele Geçirildi",
+    "summary": "İstanbul'da yapılan uyuşturucu operasyonunda 117 kök Hint keneviri ele geçirildi. Operasyon kapsamında several şüpheli hakkında soruşturma başlatıldı.",
+    "fullText": "İstanbul'da gerçekleştirilen uyuşturucu operasyonunda, güvenlik güçleri tarafından 117 kök Hint keneviri ele geçirildi. Operasyon, uyuşturucu madde ticaretinin önlenmesi amacıyla yürütülen çalışmaların bir parçası olarak gerçekleşti.",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbuldaki-uyusturucu-operasyonunda-117-kok-hint-keneviri-ele-gecirildi-h1556175",
+    "date": "09.08.2026 - 18:17"
+  },
+  {
+    "id": "1786288660_3",
+    "category": "TRAFİK",
+    "title": "Antalya'da Tünel Kazası: Yaşlı Çift Hayatını Kaybetti",
+    "summary": "Antalya'da bir otomobil tünelin duvarına çarparak büyük bir kazaya neden oldu. Kazada yaşlı bir çift hayatını kaybetti.",
+    "fullText": "Antalya'da meydana gelen tünel kazasında, bir otomobil tünelin duvarına çarparak büyük bir kazaya neden oldu. Kazada hayatını kaybeden yaşlı çift için soruşturma başlatıldı.",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/antalyayi-otomobil-tunelin-duvarina-carpti-yasli-cift-yasamini-yitirdi-h1556203",
+    "date": "09.08.2026 - 18:17"
+  },
+  {
+    "id": "1786288660_4",
+    "category": "DÜNYA",
+    "title": "Suriye, Topraklarındaki Rus Üsleri İçin Anlaşma Yapıldığını Açıkladı",
+    "summary": "Suriye, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardığını açıkladı. Anlaşma, iki ülke arasındaki askeri işbirliğini güçlendirecek.",
+    "fullText": "Suriye hükümeti, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardığını resmen açıkladı. Bu anlaşma, Suriye ve Rusya arasındaki askeri işbirliğini daha da güçlendirecek ve bölgedeki stratejik ortaklığı pekiştirecek.",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/dunya/suriye-topraklarindaki-rus-usleri-icin-moskova-ile-anlasmaya-vardigini-acikladi-953483.html",
+    "date": "09.08.2026 - 18:17"
+  },
+  {
+    "id": "1786288539_1",
+    "category": "SUÇ",
+    "title": "Tırın Gizli Bölmesinde Suç Örgütü",
+    "summary": "Suç örgütü üyesi yakalandı",
+    "fullText": "İstanbul'da bir tırın gizli bölmesinde yapılan operasyon sonucu suç örgütü üyesi yakalandı. Operasyon sırasında birçok suç unsuru ele geçirildi.",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
+    "date": "09.08.2026 - 18:15"
+  },
+  {
+    "id": "1786288539_2",
+    "category": "SUÇ",
+    "title": "Uyuşturucu Operasyonu",
+    "summary": "117 kök Hint keneviri ele geçirildi",
+    "fullText": "İstanbul'da yapılan uyuşturucu operasyonunda 117 kök Hint keneviri ele geçirildi. Operasyon sırasında birçok şüpheli yakalandı.",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbuldaki-uyusturucu-operasyonunda-117-kok-hint-keneviri-ele-gecirildi-h1556175",
+    "date": "09.08.2026 - 18:15"
+  },
+  {
+    "id": "1786288539_3",
+    "category": "TRAFFIK",
+    "title": "Tünel Kazası",
+    "summary": "Yaşlı çift yaşamını yitirdi",
+    "fullText": "Antalya'da bir otomobil tünelin duvarına çarptı. Kazada yaşlı bir çift yaşamını yitirdi. Kazanın nedeni henüz belirlenmedi.",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/antalyayi-otomobil-tunelin-duvarina-carpti-yasli-cift-yasamini-yitirdi-h1556203",
+    "date": "09.08.2026 - 18:15"
+  },
+  {
+    "id": "1786288539_4",
+    "category": "DÜNYA",
+    "title": "Gazze Ateşkesi",
+    "summary": "Hamas ikinci aşama planına bağlı",
+    "fullText": "Hamas, Gazze ateşkesinin ikinci aşama planına bağlı olduğunu açıkladı. Açıklamada ateşkesin devamı için şartların yerine getirilmesi gerektiği belirtildi.",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/dunya/hamas-gazze-ateskesinin-ikinci-asama-planina-bagli-oldugunu-acikladi-953484.html",
+    "date": "09.08.2026 - 18:15"
+  },
+  {
+    "id": "1786288367_1",
+    "category": "SUÇ",
+    "title": "Tırın Gizli Bölmesinde Suç Örgütü Üyesi",
+    "summary": "İstanbul'da operasyon",
+    "fullText": "İstanbul'da yapılan operasyon kapsamında, bir tırın gizli bölmesinde suç örgütü üyesi yakalandı. Operasyon, emniyet güçlerinin yoğun çalışması sonucu gerçekleşti.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a789484098f6159.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
+    "date": "09.08.2026 - 18:12"
+  },
+  {
+    "id": "1786288367_2",
+    "category": "SUÇ",
+    "title": "Uyuşturucu Operasyonunda 117 Kök Hint Keneviri",
+    "summary": "İstanbul'da büyük ele geçirme",
+    "fullText": "İstanbul'da yapılan uyuşturucu operasyonunda, 117 kök Hint keneviri ele geçirildi. Operasyon, uyuşturucuyla mücadele kapsamında gerçekleştirildi.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7877875e216648.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbuldaki-uyusturucu-operasyonunda-117-kok-hint-keneviri-ele-gecirildi-h1556175",
+    "date": "09.08.2026 - 18:12"
+  },
+  {
+    "id": "1786288367_3",
+    "category": "TRAFFIK",
+    "title": "Antalya'da Otomobil Kazası: Yaşlı Çift Hayatını Kaybetti",
+    "summary": "Tünel duvarına çarptı",
+    "fullText": "Antalya'da bir otomobil, tünelin duvarına çarparak büyük bir kazaya neden oldu. Kazada, yaşlı bir çift hayatını kaybetti.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7891f02e769334.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/antalyayi-otomobil-tunelin-duvarina-carpti-yasli-cift-yasamini-yitirdi-h1556203",
+    "date": "09.08.2026 - 18:12"
+  },
+  {
+    "id": "1786288367_4",
+    "category": "DÜNYA",
+    "title": "Suriye, Rus Üsleri İçin Anlaşma",
+    "summary": "Moskova ile anlaşma",
+    "fullText": "Suriye, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardı. Anlaşma, iki ülke arasındaki iş birliğini güçlendirecek.",
+    "image": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/suriye-re-2480760.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/dunya/suriye-topraklarindaki-rus-usleri-icin-moskova-ile-anlasmaya-vardigini-acikladi-953483.html",
+    "date": "09.08.2026 - 18:12"
+  },
+  {
+    "id": "1786288151_1",
+    "category": "SUÇ",
+    "title": "Tırın Gizli Bölmesinde Suç Örgütü Üyesi Yakalandı",
+    "summary": "İstanbul'da operasyon",
+    "fullText": "İstanbul'da yapılan operasyon kapsamında bir tırın gizli bölmesinde suç örgütü üyesi yakalandı. Operasyon, güvenlik güçlerinin yoğun çalışmasıyla gerçekleşti.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a789484098f6159.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
+    "date": "09.08.2026 - 18:09"
+  },
+  {
+    "id": "1786288168_2",
+    "category": "TRAFFİK",
+    "title": "Antalya'da Tünel Kazası: Yaşlı Çift Hayatını Kaybetti",
+    "summary": "Tünelde otomobil kazası",
+    "fullText": "Antalya'da bir tünelde meydana gelen otomobil kazasında yaşlı bir çift hayatını kaybetti. Kazanın nedenleri araştırılıyor.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7891f02e769334.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/antalyayi-otomobil-tunelin-duvarina-carpti-yasli-cift-yasamini-yitirdi-h1556203",
+    "date": "09.08.2026 - 18:09"
+  },
+  {
+    "id": "1786288185_3",
+    "category": "SUÇ",
+    "title": "İstanbul'da Uyuşturucu Operasyonu: 117 Kök Hint Keneviri Ele Geçirildi",
+    "summary": "Uyuşturucu operasyonu",
+    "fullText": "İstanbul'da yapılan uyuşturucu operasyonunda 117 kök Hint keneviri ele geçirildi. Operasyon, uyuşturucuyla mücadele kapsamında gerçekleştirildi.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7877875e216648.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbuldaki-uyusturucu-operasyonunda-117-kok-hint-keneviri-ele-gecirildi-h1556175",
+    "date": "09.08.2026 - 18:09"
+  },
+  {
+    "id": "1786288201_4",
+    "category": "DÜNYA",
+    "title": "Suriye, Topraklarındaki Rus Üsleri İçin Anlaşma Açıkladı",
+    "summary": "Suriye-Rusya anlaşması",
+    "fullText": "Suriye, topraklarındaki Rus üsleri için Moskova ile bir anlaşmaya vardığını açıkladı. Anlaşma, iki ülke arasındaki iş birliğini güçlendirecek.",
+    "image": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/suriye-re-2480760.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/dunya/suriye-topraklarindaki-rus-usleri-icin-moskova-ile-anlasmaya-vardigini-acikladi-953483.html",
+    "date": "09.08.2026 - 18:09"
+  },
+  {
+    "id": "1786287955_1",
+    "category": "SUÇ",
+    "title": "Tırın Gizli Bölmesinde Suç Örgütü Üyesi Yakalandı",
+    "summary": "İstanbul'da tırın gizli bölmesinde suç örgütü üyesi yakalandı.",
+    "fullText": "İstanbul'da yapılan operasyon kapsamında, bir tırın gizli bölmesinde suç örgütü üyesi yakalandı. Şüphelinin, organize suç örgütü üyeliği şüphesiyle gözaltına alındığı öğrenildi.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a789484098f6159.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
+    "date": "09.08.2026 - 18:05"
+  },
+  {
+    "id": "1786287955_2",
+    "category": "SUÇ",
+    "title": "Uyuşturucu Operasyonunda 117 Kök Hint Keneviri Ele Geçirildi",
+    "summary": "İstanbul'da uyuşturucu operasyonunda 117 kök Hint keneviri ele geçirildi.",
+    "fullText": "İstanbul'da yapılan uyuşturucu operasyonunda, 117 kök Hint keneviri ele geçirildi. Operasyon kapsamında, several şüpheli gözaltına alındı.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7877875e216648.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbuldaki-uyusturucu-operasyonunda-117-kok-hint-keneviri-ele-gecirildi-h1556175",
+    "date": "09.08.2026 - 18:05"
+  },
+  {
+    "id": "1786287955_3",
+    "category": "TRAFFİK",
+    "title": "Antalya'da Otomobil Tünel Duvarına Çarptı: Yaşlı Çift Yaşamını Yitirdi",
+    "summary": "Antalya'da otomobil tünel duvarına çarptı, yaşlı çift yaşamını yitirdi.",
+    "fullText": "Antalya'da, bir otomobil tünelin duvarına çarparak devrildi. Kaza sonucunda, yaşlı bir çift yaşamını yitirdi. Olayın nedeni henüz belirlenmedi.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7891f02e769334.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/antalyayi-otomobil-tunelin-duvarina-carpti-yasli-cift-yasamini-yitirdi-h1556203",
+    "date": "09.08.2026 - 18:05"
+  },
+  {
+    "id": "1786287955_4",
+    "category": "DÜNYA",
+    "title": "Suriye, Rus Üsleri İçin Moskova İle Anlaşmaya Vardı",
+    "summary": "Suriye, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardı.",
+    "fullText": "Suriye hükümeti, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardı. Anlaşma kapsamında, Rus üslerinin Suriye'de kalacağı öğrenildi.",
+    "image": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/suriye-re-2480760.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/dunya/suriye-topraklarindaki-rus-usleri-icin-moskova-ile-anlasmaya-vardigini-acikladi-953483.html",
+    "date": "09.08.2026 - 18:05"
+  },
+  {
+    "id": "1786287843_1",
+    "category": "SUÇ",
+    "title": "Tırın Gizli Bölmesinde Suç Örgütü Üyesi Yakalandı",
+    "summary": "İstanbul'da operasyon",
+    "fullText": "İstanbul'da yapılan operasyon sonucu bir tırın gizli bölmesinde suç örgütü üyesi yakalandı. Operasyon sırasında güvenlik güçleri, tırın gizli bölmesinde saklanan şahsı yakalayarak gözaltına aldı.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a789484098f6159.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
+    "date": "09.08.2026 - 18:04"
+  },
+  {
+    "id": "1786287843_2",
+    "category": "SUÇ",
+    "title": "Uyuşturucu Operasyonunda 117 Kök Hint Keneviri Ele Geçirildi",
+    "summary": "İstanbul'da uyuşturucu operasyonu",
+    "fullText": "İstanbul'da yapılan uyuşturucu operasyonunda 117 kök Hint keneviri ele geçirildi. Operasyon sırasında güvenlik güçleri, uyuşturucu madde üreten ve satan şahısları yakalayarak gözaltına aldı.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7877875e216648.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbuldaki-uyusturucu-operasyonunda-117-kok-hint-keneviri-ele-gecirildi-h1556175",
+    "date": "09.08.2026 - 18:04"
+  },
+  {
+    "id": "1786287843_3",
+    "category": "TRAFİK",
+    "title": "Antalya'da Otomobil Tünel Duvarına Çarptı: Yaşlı Çift Hayatını Kaybetti",
+    "summary": "Antalya'da trafik kazası",
+    "fullText": "Antalya'da bir otomobil tünelin duvarına çarparak devrildi. Kazada yaşlı bir çift hayatını kaybetti. Kazanın nedeni henüz belirlenmedi.",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7891f02e769334.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/antalyayi-otomobil-tunelin-duvarina-carpti-yasli-cift-yasamini-yitirdi-h1556203",
+    "date": "09.08.2026 - 18:04"
+  },
+  {
+    "id": "1786287843_4",
+    "category": "DÜNYA",
+    "title": "Suriye, Rus Üsleri İçin Moskova İle Anlaşmaya Vardı",
+    "summary": "Suriye ve Rusya anlaşma",
+    "fullText": "Suriye, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardı. Anlaşma kapsamında Suriye, Rus üslerinin ülkede kalmasına izin verecek.",
+    "image": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/suriye-re-2480760.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/dunya/suriye-topraklarindaki-rus-usleri-icin-moskova-ile-anlasmaya-vardigini-acikladi-953483.html",
+    "date": "09.08.2026 - 18:04"
+  }
+]
