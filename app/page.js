@@ -1,6 +1,25 @@
 'use client';
 import { useState, useEffect } from 'react';
 
+// Bozuk etiketleri otomatik birleştiren fonksiyon
+const normalizeCat = (cat) => {
+  if (!cat) return 'GÜNDEM';
+  const c = cat.trim().toUpperCase();
+  const map = {
+    'SUC': 'SUÇ',
+    'TRAFIG': 'TRAFİK',
+    'TRAFIK': 'TRAFİK',
+    'EKONOMI': 'EKONOMİ',
+    'IC HABERLER': 'İÇ HABERLER',
+    'SAGLIK': 'SAĞLIK',
+    'EGITIM': 'EĞİTİM',
+    'POLITIKA': 'POLİTİKA',
+    'DUNYA': 'DÜNYA',
+    'TEKNOLOJI': 'TEKNOLOJİ'
+  };
+  return map[c] || c;
+};
+
 export default function Home() {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
@@ -8,44 +27,48 @@ export default function Home() {
   const [selectedCat, setSelectedCat] = useState('TÜMÜ');
   const [weather, setWeather] = useState(null);
   const [prayerTimes, setPrayerTimes] = useState(null);
-  const [city, setCity] = useState('İstanbul');
+  const [city, setCity] = useState('Konum alınıyor...');
 
   useEffect(() => {
-    // 1. Haberleri Çek
+    // 1. Haberleri Çek ve Etiketleri Düzelt
     fetch('/news.json')
       .then((res) => res.json())
       .then((data) => {
-        setNews(data);
-        setFilteredNews(data);
+        const cleanedData = data.map(item => ({
+          ...item,
+          category: normalizeCat(item.category)
+        }));
+        setNews(cleanedData);
+        setFilteredNews(cleanedData);
       })
       .catch(() => setNews([]));
 
-    // 2. Kullanıcı Konumunu ve Hava Durumu/Ezan Saatlerini Çek
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => fetchWidgets(pos.coords.latitude, pos.coords.longitude),
-        () => fetchWidgets(41.0082, 28.9784) // Varsayılan: İstanbul
-      );
-    } else {
-      fetchWidgets(41.0082, 28.9784);
-    }
+    // 2. IP Üzerinden Otomatik Şehir Tespiti
+    fetch('https://ipapi.co/json/')
+      .then((res) => res.json())
+      .then((geoData) => {
+        const userCity = geoData.city || 'İstanbul';
+        const lat = geoData.latitude || 41.0082;
+        const lon = geoData.longitude || 28.9784;
+
+        setCity(userCity);
+
+        // Hava Durumu
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+          .then(res => res.json())
+          .then(w => setWeather(w.current_weather))
+          .catch(() => {});
+
+        // Ezan Saatleri
+        fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=13`)
+          .then(res => res.json())
+          .then(p => setPrayerTimes(p.data.timings))
+          .catch(() => {});
+      })
+      .catch(() => {
+        setCity('İstanbul');
+      });
   }, []);
-
-  const fetchWidgets = async (lat, lon) => {
-    try {
-      // Weather API
-      const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-      const wData = await wRes.json();
-      setWeather(wData.current_weather);
-
-      // Ezan Saatleri API
-      const pRes = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=13`);
-      const pData = await pRes.json();
-      setPrayerTimes(pData.data.timings);
-    } catch (e) {
-      console.log("Widget çekilemedi", e);
-    }
-  };
 
   // Arama ve Filtreleme
   useEffect(() => {
@@ -69,7 +92,7 @@ export default function Home() {
       
       {/* HEADER */}
       <header style={{ borderBottom: '1px solid #27272a', backgroundColor: '#000', padding: '15px 20px', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
           <h1 style={{ margin: 0, fontSize: '24px', fontWeight: '800' }}>
             SAATLİK<span style={{ color: '#e11d48' }}>TÜRKİYE</span>
           </h1>
@@ -86,14 +109,14 @@ export default function Home() {
 
       <main style={{ maxWidth: '1200px', margin: '20px auto', padding: '0 20px' }}>
         
-        {/* BİLGİ WİDGETLARI (Hava Durumu + Ezan Saatleri) */}
+        {/* BİLGİ WİDGETLARI */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '15px', marginBottom: '25px' }}>
           
           {/* Hava Durumu Card */}
           <div style={{ backgroundColor: '#111113', border: '1px solid #27272a', borderRadius: '12px', padding: '15px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <span style={{ fontSize: '12px', color: '#a1a1aa' }}>📍 Canlı Hava Durumu</span>
-              <h4 style={{ margin: '5px 0 0 0', fontSize: '18px' }}>{city}</h4>
+              <h4 style={{ margin: '5px 0 0 0', fontSize: '18px', color: '#ffffff' }}>{city}</h4>
             </div>
             {weather ? (
               <div style={{ textAlign: 'right' }}>
@@ -105,7 +128,7 @@ export default function Home() {
 
           {/* Ezan Saatleri Card */}
           <div style={{ backgroundColor: '#111113', border: '1px solid #27272a', borderRadius: '12px', padding: '15px' }}>
-            <span style={{ fontSize: '12px', color: '#a1a1aa', display: 'block', marginBottom: '8px' }}>🕌 Günlük Ezan Saatleri</span>
+            <span style={{ fontSize: '12px', color: '#a1a1aa', display: 'block', marginBottom: '8px' }}>🕌 Günlük Ezan Saatleri ({city})</span>
             {prayerTimes ? (
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#f4f4f5' }}>
                 <div><small style={{ color: '#71717a' }}>İmsak</small><br/><b>{prayerTimes.Fajr}</b></div>
