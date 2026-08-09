@@ -1,5 +1,49 @@
 [
   {
+    "id": "1786309677_1",
+    "category": "GÜNDEM",
+    "title": "Şehit Ailelerine Yeni Haklar",
+    "summary": "Şehit aileleri ve gazilere yeni haklar içeren kanun teklifi TBMM'den geçti. Bu kanun teklifinin amacı, şehit ailelerine ve gazilere daha iyi hizmetler sunmaktır.",
+    "fullText": "Kanun teklifinin detayları henüz açıklanmadı.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a78e822c5dfa718.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/sehit-ve-gazilere-yeni-haklar-iceren-kanun-teklifi-tbmmden-gecti-h1556228",
+    "date": "10.08.2026 - 00:07"
+  },
+  {
+    "id": "1786309677_2",
+    "category": "DÜNYA",
+    "title": "Trump'tan İran Açıklaması",
+    "summary": "ABD'nin eski Başkanı Donald Trump, İran'la müzakereleri sessizce yürüttüklerini belirtti. Bu açıklama, uluslararası alanda büyük yankı uyandırdı.",
+    "fullText": "Trump'ın bu açıklaması, ABD'nin dış politikasına ilişkin önemli ipuçları içeriyor.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2440000/trump-iran-2440353.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/dunya/trump-iranla-muzakereleri-sessizce-yuruttuklerini-belirtti-953494.html",
+    "date": "10.08.2026 - 00:07"
+  },
+  {
+    "id": "1786309677_3",
+    "category": "SUÇ",
+    "title": "Zonguldak'ta Boğulma Tehlikesi",
+    "summary": "Zonguldak'ta boğulma tehlikesi geçiren 2 kuzenden biri kayboldu. Arama kurtarma çalışmaları devam ediyor.",
+    "fullText": "Olay, Zonguldak'ın bir plajında meydana geldi.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a78e2d83fd51603.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/zonguldakta-bogulma-tehlikesi-geciren-2-kuzenden-biri-kayboldu-h1556231",
+    "date": "10.08.2026 - 00:07"
+  },
+  {
+    "id": "1786309677_4",
+    "category": "İÇ HABERLER",
+    "title": "Deprem Sonrası Yeni Evler",
+    "summary": "6 Şubat depremleri sonrası 455 bin 357 bağımsız bölüm tamamlanıp teslim edildi. Bu evler, depremzedelerin yeni yuvaları olacak.",
+    "fullText": "Depremzedelerin yeni evlerine taşınması, yakın zamanda tamamlanacak.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2426000/deprem-konutu-trt-2427307.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/turkiye/6-subat-depremleri-sonrasi-455-bin-357-bagimsiz-bolum-tamamlanip-teslim-edildi-953493.html",
+    "date": "10.08.2026 - 00:07"
+  },
+  {
     "id": "1786306039_1",
     "category": "GÜNDEM",
     "title": "Cumhurbaşkanı Erdoğan'a Hakaret Eden Şüpheli Gözaltına Alındı",
@@ -43,5 +87,4 @@
     "sourceUrl": "https://www.aa.com.tr/tr/gundem/sehit-aileleri-ve-gazilerin-haklarina-yonelik-duzenlemeleri-iceren-kanun-teklifi-tbmm-genel-kurulunda/4022612",
     "date": "09.08.2026 - 23:07"
   }
-  
 ]
