@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "id": "1786289536_1",
+    "category": "SUÇ",
+    "title": "İstanbul'da Uyuşturucu Operasyonu",
+    "summary": "İstanbul'da yapılan uyuşturucu operasyonunda 117 kök Hint keneviri ele geçirildi. Operasyon kapsamında birçok şüpheli yakalandı ve adli işlemler başlatıldı.",
+    "fullText": "İstanbul Emniyet Müdürlüğü'nün düzenlediği operasyonla birlikte uyuşturucu madde ticareti yapan bir grup şüpheli yakalandı. Ele geçirilen 117 kök Hint keneviri, laboratuvar analizleri için gönderildi.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7877875e216648.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbuldaki-uyusturucu-operasyonunda-117-kok-hint-keneviri-ele-gecirildi-h1556175",
+    "date": "09.08.2026 - 18:32"
+  },
+  {
+    "id": "1786289536_2",
+    "category": "TRAFİK",
+    "title": "Antalya'da Tünel Kazası",
+    "summary": "Antalya'da bir otomobil tünelin duvarına çarparak yangın çıktı. Kaza sonucunda yaşlı bir çift hayatını kaybetti. İtfaiye ekipleri yangını söndürdü.",
+    "fullText": "Antalya'nın bir ilçesinde meydana gelen tünel kazasında, otomobilin duvarla çarpışması sonucu çıkan yangın kısa sürede büyüdü. Yangın söndürüldükten sonra araçta bulunan yaşlı çiftin hayatını kaybettiği belirlendi.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7891f02e769334.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/antalyayi-otomobil-tunelin-duvarina-carpti-yasli-cift-yasamini-yitirdi-h1556203",
+    "date": "09.08.2026 - 18:32"
+  },
+  {
+    "id": "1786289536_3",
+    "category": "TRAFİK",
+    "title": "Gökçeada'da Motosiklet Kazası",
+    "summary": "Gökçeada'da park halindeki bir otomobile çarpan motosikletteki iki kişi hayatını kaybetti. Kazanın nedenleri araştırılıyor.",
+    "fullText": "Gökçeada'da meydana gelen kazada, motosikletin park halindeki otomobile çarpması sonucu iki kişi hayatını kaybetti. Kazanın oluş nedenleri ve sorumluları hakkında soruşturma başlatıldı.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/canakkale-kaza-aa-2480762.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/turkiye/gokceadada-park-halindeki-otomobile-carpan-motosikletteki-2-kisi-oldu-953487.html",
+    "date": "09.08.2026 - 18:32"
+  },
+  {
+    "id": "1786289536_4",
+    "category": "DÜNYA",
+    "title": "Suriye ve Rusya Anlaşması",
+    "summary": "Suriye, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardığını açıkladı. Anlaşma, iki ülke arasındaki askeri işbirliğini güçlendirecek.",
+    "fullText": "Suriye ve Rusya arasında imzalanan anlaşmayla birlikte, Suriye'deki Rus askeri üslerinin statüsü belirlendi. Anlaşma, iki ülkenin bölgedeki stratejik işbirliğini daha da pekiştirecek.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/mekke-anlasmasi-2480761.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/dunya/pakistan-disisleri-bakani-dar-mekke-ortak-savunma-anlasmasinin-amac-ve-kapsamina-dikkat-cekti-953485.html",
+    "date": "09.08.2026 - 18:32"
+  }
+]
