@@ -43,56 +43,87 @@ export default function Home() {
       })
       .catch(() => setNews([]));
 
-    // 2. Yedekli IP Konum Servisi (İstemci Tabanlı)
-    const getLocationAndWidgets = async () => {
-      let userCity = 'İstanbul';
-      let lat = 41.0082;
-      let lon = 28.9784;
-
-      try {
-        // 1. Tercih: ipapi.co
-        const res1 = await fetch('https://ipapi.co/json/');
-        if (res1.ok) {
-          const geo1 = await res1.json();
-          if (geo1.city && geo1.latitude && geo1.longitude) {
-            userCity = geo1.city;
-            lat = geo1.latitude;
-            lon = geo1.longitude;
-          }
-        } else {
-          throw new Error('ipapi limit');
-        }
-      } catch (err1) {
-        try {
-          // 2. Tercih (Yedek Servis): ip-api.com
-          const res2 = await fetch('https://ip-api.com/json/?fields=status,city,lat,lon');
-          const geo2 = await res2.json();
-          if (geo2.status === 'success' && geo2.city) {
-            userCity = geo2.city;
-            lat = geo2.lat;
-            lon = geo2.lon;
-          }
-        } catch (err2) {
-          console.log('Konum servislerine ulaşılamadı, varsayılan İstanbul kullanılıyor.');
-        }
-      }
-
-      setCity(userCity);
-
-      // Hava Durumu Verisi
+    // Weather & Prayer fetch helper
+    const loadWidgets = (lat, lon, cityName) => {
+      setCity(cityName);
+      
+      // Hava Durumu
       fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
         .then(res => res.json())
         .then(w => setWeather(w.current_weather))
         .catch(() => {});
 
-      // Ezan Vakiti Verisi
+      // Ezan Vakiti
       fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=13`)
         .then(res => res.json())
         .then(p => setPrayerTimes(p.data?.timings))
         .catch(() => {});
     };
 
-    getLocationAndWidgets();
+    const saveAndLoad = (lat, lon, cityName) => {
+      localStorage.setItem('user_city', cityName);
+      localStorage.setItem('user_lat', lat);
+      localStorage.setItem('user_lon', lon);
+      loadWidgets(lat, lon, cityName);
+    };
+
+    // 2. AKILLI KONUM YÖNETİMİ
+    const initLocation = async () => {
+      // A) Daha önce kaydedilmiş konum var mı? (Sayfa yenilemelerinde zıplamayı engeller)
+      const cachedCity = localStorage.getItem('user_city');
+      const cachedLat = localStorage.getItem('user_lat');
+      const cachedLon = localStorage.getItem('user_lon');
+
+      if (cachedCity && cachedLat && cachedLon) {
+        loadWidgets(cachedLat, cachedLon, cachedCity);
+        return;
+      }
+
+      // B) Cihazın Gerçek Konumu (GPS / Wi-Fi - En Doğru Sonuç)
+      if (typeof window !== 'undefined' && 'geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            try {
+              // Koordinatı şehir ismine çevir (Reverse Geocoding)
+              const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=tr`);
+              const geo = await res.json();
+              const detectedCity = geo.city || geo.principalSubdivision || 'Antalya';
+              saveAndLoad(lat, lon, detectedCity);
+              return;
+            } catch (e) {
+              saveAndLoad(lat, lon, 'Antalya');
+              return;
+            }
+          },
+          () => {
+            // İzin verilmezse IP tabanlı aramaya geç
+            fetchIPLocation();
+          },
+          { timeout: 4000 }
+        );
+      } else {
+        fetchIPLocation();
+      }
+    };
+
+    // C) IP Tabanlı Yedek Konum Çekici
+    const fetchIPLocation = async () => {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        if (data.city && data.latitude && data.longitude) {
+          saveAndLoad(data.latitude, data.longitude, data.city);
+          return;
+        }
+      } catch (err) {}
+
+      // Varsayılan Antalya Garantisi
+      saveAndLoad(36.8848, 30.7056, 'Antalya');
+    };
+
+    initLocation();
   }, []);
 
   useEffect(() => {
@@ -207,7 +238,7 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
           {filteredNews.length > 0 ? (
             filteredNews.map((item) => {
-              const imageSrc = item.imageUrl || item.image; // GÖRSEL DÜZELTMESİ
+              const imageSrc = item.imageUrl || item.image;
               return (
                 <article key={item.id} style={{ backgroundColor: '#111113', border: '1px solid #27272a', borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   {imageSrc && (
