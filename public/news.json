@@ -1,5 +1,49 @@
 [
   {
+    "id": "1786286625_1",
+    "category": "İÇ HABERLER",
+    "title": "52 orman yangınına ilişkin soruşturma",
+    "summary": "Adalet Bakanı Gürlek, 52 orman yangınıyla ilgili yürütülen soruşturma kapsamında 9 şüphelinin tutuklandığını açıkladı. Gözaltına alınan 34 şüpheliden 14'ü adli kontrol altına alındı",
+    "fullText": "Adalet Bakanı Gürlek, 1 Haziran'dan itibaren 52 orman yangınıyla ilgili yürütülen soruşturma kapsamında tespit edilen 34 şüpheliden 9'unun tutuklandığını bildirdi",
+    "image": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2434000/hava-durumu-kapak-trt-haber-2434254.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/turkiye/kuzeyde-saganak-batida-kavurucu-sicak-953481.html",
+    "date": "09.08.2026 - 17:43"
+  },
+  {
+    "id": "1786286625_2",
+    "category": "SUÇ",
+    "title": "Samsun’da korkunç cinayet",
+    "summary": "Canik ilçesinde 70 yaşındaki Necmettin Uzun, evinde çok sayıda bıçak darbesiyle öldürülmüş halde bulundu. Cinayeti işlediği iddia edilen 59 yaşındaki Ertan B, polis takibi sonucu yakalandı",
+    "fullText": "Canik ilçesinde yalnız yaşayan 70 yaşındaki Necmettin Uzun, evinde çok sayıda bıçak darbesiyle öldürülmüş halde bulundu",
+    "image": "https://images.ntv.com.tr/images/Ormanyangını-572436.jpg",
+    "source": "ntv.com.tr",
+    "sourceUrl": "https://www.ntv.com.tr/turkiye/52-orman-yanginina-iliskin-sorusturma-9-supheli-tutuklandi-1736640",
+    "date": "09.08.2026 - 17:43"
+  },
+  {
+    "id": "1786286625_3",
+    "category": "HAVA DURUMU",
+    "title": "Kuzeyde sağanak, batıda kavurucu sıcak",
+    "summary": "Yeni haftada yurdun büyük bölümünde sıcak hava etkisini sürdürecek. Kuzey ve doğu kesimlerde ise sağanak görülecek. Meteoroloji, özellikle Samsun çevresi için yarın kuvvetli yağış uyarısında bulundu",
+    "fullText": "Yeni haftada yurdun büyük bölümünde sıcak hava etkisini sürdürecek. Kuzey ve doğu kesimlerde ise sağanak görülecek",
+    "image": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a789019ab0d1620.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/yazarlar/asli-didari/istanbula-yakin-tatil-rotalari",
+    "date": "09.08.2026 - 17:43"
+  },
+  {
+    "id": "1786286625_4",
+    "category": "TRAFİK",
+    "title": "İstanbul'da motosikletin araca çarptığı anlar kamerada",
+    "summary": "Avcılar ilçesinde yasak olmasına rağmen U dönüşü yapmak isteyen otomobile motosiklet çarptı. Motosiklet sürücüsünün ağır yaralandığı kaza kameraya yansıdı",
+    "fullText": "Avcılar ilçesinde yasak olmasına rağmen U dönüşü yapmak isteyen otomobile motosiklet çarptı",
+    "image": "https://imgcdn.ensonhaber.com/media/sondakika/sonex2.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/akin-gurlekten-orman-yangini-bilancosu-9-supheli-tutuklandi-h1556202",
+    "date": "09.08.2026 - 17:43"
+  },
+  {
     "id": 1,
     "category": "SUC",
     "title": "Gece ışığı yanan ev şüphe uyandırdı. Çok sayıda bıçak darbesiyle öldürülmüş",
