@@ -41,66 +41,44 @@ def kategori_duzelt(cat):
 
 
 def gorsel_url_bul(entry):
-    """RSS entry içerisinden veya haber sayfasından (og:image) haberin görselini çeker."""
-    # 1. media_content kontrolü
+    """RSS entry içerisinden veya haberin web sayfasından (og:image) görsel çeker."""
+    # 1. media_content
     if 'media_content' in entry and len(entry.media_content) > 0:
         url = entry.media_content[0].get('url')
         if url: return url
 
-    # 2. enclosures (ekler) kontrolü
+    # 2. enclosures
     if 'enclosures' in entry and len(entry.enclosures) > 0:
         for enc in entry.enclosures:
             if enc.get('type', '').startswith('image/') or enc.get('href', '').endswith(('.jpg', '.jpeg', '.png', '.webp')):
                 return enc.get('href')
 
-    # 3. media_thumbnail kontrolü
+    # 3. media_thumbnail
     if 'media_thumbnail' in entry and len(entry.media_thumbnail) > 0:
         url = entry.media_thumbnail[0].get('url')
         if url: return url
 
-    # 4. Summary veya Content içindeki HTML <img> etiketi
+    # 4. Content / Summary içindeki HTML img etiketi
     html_content = entry.get('summary', '') + entry.get('description', '')
     img_match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', html_content, re.IGNORECASE)
     if img_match:
         return img_match.group(1)
 
-    # 5. 🔥 YEDEK PLAN (RSS'TE GÖRSEL YOKSA SAYFADAN OG:IMAGE ÇEK)
+    # 5. 🔥 GELİŞMİŞ YEDEK PLAN: Haberin kendi web sayfasına gidip og:image çekme
     haber_linki = entry.get("link", "")
     if haber_linki:
         try:
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36"}
-            resp = requests.get(haber_linki, headers=headers, timeout=3)
+            resp = requests.get(haber_linki, headers=headers, timeout=4)
             if resp.status_code == 200:
-                # Open Graph (og:image) etiketini ara
                 og_match = re.search(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']', resp.text, re.IGNORECASE)
                 if not og_match:
-                    # Content özniteliği property'den önce geliyorsa
                     og_match = re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']', resp.text, re.IGNORECASE)
                 
                 if og_match:
                     return og_match.group(1)
         except Exception:
-            pass  # Zaman aşımı veya bağlantı hatasında sistemi durdurma
-
-    return ""
-    """RSS entry içerisinden haberin görsel URL'sini çeker."""
-    if 'media_content' in entry and len(entry.media_content) > 0:
-        url = entry.media_content[0].get('url')
-        if url: return url
-
-    if 'enclosures' in entry and len(entry.enclosures) > 0:
-        for enc in entry.enclosures:
-            if enc.get('type', '').startswith('image/') or enc.get('href', '').endswith(('.jpg', '.jpeg', '.png', '.webp')):
-                return enc.get('href')
-
-    if 'media_thumbnail' in entry and len(entry.media_thumbnail) > 0:
-        url = entry.media_thumbnail[0].get('url')
-        if url: return url
-
-    html_content = entry.get('summary', '') + entry.get('description', '')
-    img_match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', html_content, re.IGNORECASE)
-    if img_match:
-        return img_match.group(1)
+            pass
 
     return ""
 
@@ -113,7 +91,7 @@ def git_push_degisiklikleri():
     try:
         print("🔄 GitHub'a pushlanıyor (Vercel tetikleniyor)...")
         subprocess.run(["git", "add", NEWS_JSON_PATH], check=True)
-        commit_msg = f"auto: haberler ve görseller güncellendi ({datetime.now().strftime('%H:%M')})"
+        commit_msg = f"auto: haberler güncellendi ({datetime.now().strftime('%H:%M')})"
         subprocess.run(["git", "commit", "-m", commit_msg], check=True)
         subprocess.run(["git", "push"], check=True)
         print("🚀 GitHub'a başarıyla pushlandı! Vercel canlıyı güncelliyor.")
@@ -243,7 +221,7 @@ def instagrama_gorsel_at(gorsel_yolu):
 
 def groq_ile_ozetle(ham_haberler):
     if not GROQ_API_KEY:
-        print("❌ HATA: GROQ_API_KEY .env dosyasında bulunamadı!")
+        print("❌ HATA: GROQ_API_KEY bulunamadı!")
         return None
 
     haber_listesi_prompt = [
@@ -260,7 +238,7 @@ def groq_ile_ozetle(ham_haberler):
     2. "baslik": Haber başlığı çarpıcı ve net olmalı (6-10 kelime).
     3. "kisa_aciklama": HER HABER İÇİN KESİNLİKLE VE İSTİSNASIZ TAM 2 CÜMLE YAZACAKSIN.
     4. "kategori": GÜNDEM / İÇ HABERLER / SUÇ / TRAFİK / EKONOMİ / DÜNYA / TEKNOLOJİ kategorilerinden biri olmalı.
-    5. TEKİLLEŞTİRME: Seçtiğin 4 haberin konusu BİRBİRİNDEN TAMAMEN FARKLI olmalıdır. Aynı olayı/konuyu anlatan iki farklı haberi KESİNLİKLE SEÇME!
+    5. TEKİLLEŞTİRME: Seçtiğin 4 haberin konusu BİRBİRİNDEN TAMAMEN FARKLI olmalıdır. Same topic is STRICTLY FORBIDDEN!
 
     İstenen JSON Yapısı:
     {{
@@ -285,7 +263,7 @@ def groq_ile_ozetle(ham_haberler):
     payload = {
         "model": "llama-3.3-70b-versatile",
         "messages": [
-            {"role": "system", "content": "You are a senior Turkish news editor. Always return a valid JSON format with 'maddeler' array."},
+            {"role": "system", "content": "You are a senior Turkish news editor. Always return valid JSON containing 'maddeler' array."},
             {"role": "user", "content": prompt}
         ],
         "response_format": {"type": "json_object"},
@@ -298,7 +276,6 @@ def groq_ile_ozetle(ham_haberler):
             clean_json = response.json()['choices'][0]['message']['content']
             parsed_data = json.loads(clean_json)
             
-            # Esnek JSON okuma (AI farklı anahtar döndürürse patlamaması için)
             if isinstance(parsed_data, dict):
                 items = parsed_data.get("maddeler") or parsed_data.get("news") or parsed_data.get("haberler")
                 if not items and len(parsed_data.values()) > 0:
@@ -309,14 +286,16 @@ def groq_ile_ozetle(ham_haberler):
             elif isinstance(parsed_data, list):
                 return parsed_data
         else:
-            print(f"❌ Groq API Hatası (HTTP {response.status_code}): {response.text}")
+            print(f"❌ Groq API Hatası: {response.status_code}")
     except Exception as e:
-        print(f"❌ Groq Bağlantı / Yanıt İşleme Hatası: {e}")
+        print(f"❌ Groq İşleme Hatası: {e}")
 
     return None
 
 
 def haberleri_islemden_gecir():
+    print(f"\n--------------------------------------------------")
+    print(f"⏰ Güncelleme Başladı: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}")
     print("🔄 RSS akışları taranıyor...")
     ham_haberler = []
 
@@ -328,23 +307,22 @@ def haberleri_islemden_gecir():
                 if not baslik:
                     continue
 
-                # --- BENZER HABER FİLTRESİ ---
+                # Benzer haber kontrolü
                 zaten_var = False
                 for h in ham_haberler:
                     benzerlik = SequenceMatcher(None, baslik.lower(), h["orijinal_baslik"].lower()).ratio()
-                    if benzerlik > 0.50:  # %50 üzeri benzer başlıkları baştan ele
+                    if benzerlik > 0.50:
                         zaten_var = True
                         break
                 
                 if zaten_var:
                     continue
-                # -----------------------------
 
                 ham_haberler.append({
                     "orijinal_baslik": baslik,
                     "ozet": entry.get("summary", ""),
                     "link": entry.get("link", ""),
-                    "gorsel_url": gorsel_url_bul(entry),
+                    "gorsel_url": gorsel_url_bul(entry), # RSS + og:image kontrolü
                     "kaynak": parsed.feed.get("title", "Haber Kaynağı")
                 })
         except Exception as e:
@@ -358,7 +336,7 @@ def haberleri_islemden_gecir():
 
     ai_data = groq_ile_ozetle(ham_haberler)
     if not ai_data:
-        print("❌ AI aşaması başarısız olduğu için işlem durduruldu.")
+        print("❌ AI aşaması başarısız olduğu için bu tur pas geçiliyor.")
         return
 
     mevcut_haberler = []
@@ -397,15 +375,15 @@ def haberleri_islemden_gecir():
         }
         yeni_eklenenler.append(yeni_haber)
 
-    # 1. LOCAL JSON YAZMA
+    # 1. LOCAL JSON YAZMA (100 HABERE KADAR SAKLAMA)
     toplam_haberler = yeni_eklenenler + mevcut_haberler
-    toplam_haberler = toplam_haberler[:30]
+    toplam_haberler = toplam_haberler[:100]  # Sitede en fazla 100 haber tutulur
 
     os.makedirs(os.path.dirname(NEWS_JSON_PATH), exist_ok=True)
     with open(NEWS_JSON_PATH, "w", encoding="utf-8") as f:
         json.dump(toplam_haberler, f, ensure_ascii=False, indent=2)
 
-    print("✅ news.json güncellendi.")
+    print(f"✅ 'news.json' güncellendi. Toplam {len(toplam_haberler)} haber veritabanında saklanıyor.")
 
     # 2. VERCEL / GITHUB OTOMATİK PUSH
     git_push_degisiklikleri()
@@ -418,8 +396,22 @@ def haberleri_islemden_gecir():
         telegrama_gorsel_at(gorsel_dosyasi)
         instagrama_gorsel_at(gorsel_dosyasi)
 
-    print(f"\n🎉 İşlem tamamlandı!")
+    print(f"🎉 Saatlik tur başarıyla tamamlandı!")
 
+
+# ---------------------------------------------------------
+# 5. OTOMATİK SAATLİK DÖNGÜ (WHILE LOOP)
+# ---------------------------------------------------------
 
 if __name__ == "__main__":
-    haberleri_islemden_gecir()
+    print("🚀 Saatlik Türkiye Otomasyon Botu Başlatıldı!")
+    print("📌 Bot her 60 dakikada bir otomatik çalışacaktır. Kapatmak için CTRL+C yapabilirsin.\n")
+    
+    while True:
+        try:
+            haberleri_islemden_gecir()
+        except Exception as e:
+            print(f"❌ Ana döngü hatası oluştu: {e}")
+        
+        print("⏳ Bir sonraki güncelleme için 1 saat (3600 sn) bekleniyor...")
+        time.sleep(3600)  # 1 saat bekleme
