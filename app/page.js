@@ -20,6 +20,20 @@ const normalizeCat = (cat) => {
   return map[c] || c;
 };
 
+// Türkiye Şehir Koordinatları Liste (Manuel Değişim İçin)
+const SEHIRLER = [
+  { name: 'Antalya', lat: 36.8848, lon: 30.7056 },
+  { name: 'Ankara', lat: 39.9334, lon: 32.8597 },
+  { name: 'İstanbul', lat: 41.0082, lon: 28.9784 },
+  { name: 'İzmir', lat: 38.4237, lon: 27.1428 },
+  { name: 'Bursa', lat: 40.1885, lon: 29.0610 },
+  { name: 'Adana', lat: 37.0000, lon: 35.3213 },
+  { name: 'Gaziantep', lat: 37.0662, lon: 37.3833 },
+  { name: 'Konya', lat: 37.8714, lon: 32.4846 },
+  { name: 'Kayseri', lat: 38.7205, lon: 35.4826 },
+  { name: 'Trabzon', lat: 41.0027, lon: 39.7168 }
+];
+
 export default function Home() {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
@@ -27,7 +41,27 @@ export default function Home() {
   const [selectedCat, setSelectedCat] = useState('TÜMÜ');
   const [weather, setWeather] = useState(null);
   const [prayerTimes, setPrayerTimes] = useState(null);
-  const [city, setCity] = useState('Konum alınıyor...');
+  const [city, setCity] = useState('Antalya');
+
+  // Widget Verilerini Çeken Fonksiyon
+  const loadWidgets = (lat, lon, cityName) => {
+    setCity(cityName);
+    localStorage.setItem('st_user_city', cityName);
+    localStorage.setItem('st_user_lat', lat);
+    localStorage.setItem('st_user_lon', lon);
+
+    // Hava Durumu
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+      .then(res => res.json())
+      .then(w => setWeather(w.current_weather))
+      .catch(() => {});
+
+    // Ezan Vakitleri
+    fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=13`)
+      .then(res => res.json())
+      .then(p => setPrayerTimes(p.data?.timings))
+      .catch(() => {});
+  };
 
   useEffect(() => {
     // 1. Haberleri Çek
@@ -43,62 +77,49 @@ export default function Home() {
       })
       .catch(() => setNews([]));
 
-    // Widget Verilerini Yükleyen Yardımcı Fonksiyon
-    const loadDataForCoords = (lat, lon, cityName) => {
-      setCity(cityName);
+    // 2. Konum Yönetimi (GPS + Cache)
+    const initLocation = () => {
+      const savedCity = localStorage.getItem('st_user_city');
+      const savedLat = localStorage.getItem('st_user_lat');
+      const savedLon = localStorage.getItem('st_user_lon');
 
-      // Hava Durumu
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
-        .then(res => res.json())
-        .then(w => setWeather(w.current_weather))
-        .catch(() => {});
-
-      // Ezan Vakiti
-      fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=13`)
-        .then(res => res.json())
-        .then(p => setPrayerTimes(p.data?.timings))
-        .catch(() => {});
-    };
-
-    // 2. EN SADE VE SIKINTISIZ KONUM BULMA
-    const getSimpleLocation = async () => {
-      // Önce hafızaya bak (Zaten şehir varsa dışarıya istek atıp konumu bozma)
-      const savedCity = localStorage.getItem('st_city');
-      const savedLat = localStorage.getItem('st_lat');
-      const savedLon = localStorage.getItem('st_lon');
-
+      // Önceden seçilmiş veya kaydedilmiş şehir varsa onu yükle
       if (savedCity && savedLat && savedLon) {
-        loadDataForCoords(savedLat, savedLon, savedCity);
+        loadWidgets(savedLat, savedLon, savedCity);
         return;
       }
 
-      try {
-        // Doğrudan il adını veren sade Türkçe IP servisi (İlçe/Köy detayıyla uğraşmaz)
-        const res = await fetch('https://ip-api.com/json/?lang=tr&fields=status,city,lat,lon');
-        const data = await res.json();
-
-        if (data && data.status === 'success' && data.city) {
-          const detectedCity = data.city;
-          const lat = data.lat;
-          const lon = data.lon;
-
-          localStorage.setItem('st_city', detectedCity);
-          localStorage.setItem('st_lat', lat);
-          localStorage.setItem('st_lon', lon);
-
-          loadDataForCoords(lat, lon, detectedCity);
-          return;
-        }
-      } catch (e) {
-        console.log('IP alınamadı, varsayılan şehir yükleniyor.');
+      // Kayıt yoksa Tarayıcı GPS İznini İste (En Doğru Sonuç)
+      if (typeof window !== 'undefined' && 'geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            // GPS geldiyse bulunulan koordinatları bas
+            loadWidgets(lat, lon, 'Konumunuz');
+          },
+          () => {
+            // İzin verilmezse varsayılan Antalya yükle
+            loadWidgets(36.8848, 30.7056, 'Antalya');
+          },
+          { timeout: 5000 }
+        );
+      } else {
+        loadWidgets(36.8848, 30.7056, 'Antalya');
       }
-
-      // Hata durumunda sağlam yedek (Ankara)
-      loadDataForCoords(39.9334, 32.8597, 'Ankara');
     };
 
-    getSimpleLocation();
+    initLocation();
   }, []);
+
+  // Şehir Elle Değiştirildiğinde
+  const handleCityChange = (e) => {
+    const selectedName = e.target.value;
+    const found = SEHIRLER.find(s => s.name === selectedName);
+    if (found) {
+      loadWidgets(found.lat, found.lon, found.name);
+    }
+  };
 
   useEffect(() => {
     let result = news;
@@ -155,12 +176,35 @@ export default function Home() {
         {/* BİLGİ WİDGETLARI */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', marginBottom: '20px' }}>
           
-          {/* Hava Durumu */}
+          {/* Hava Durumu & Şehir Seçici */}
           <div style={{ backgroundColor: '#111113', border: '1px solid #27272a', borderRadius: '12px', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <span style={{ fontSize: '11px', color: '#a1a1aa' }}>📍 Canlı Hava Durumu</span>
-              <h4 style={{ margin: '4px 0 0 0', fontSize: '16px', color: '#ffffff' }}>{city}</h4>
+              
+              {/* Elle Şehir Seçme Dropdown'ı */}
+              <div style={{ marginTop: '4px' }}>
+                <select 
+                  value={city === 'Konumunuz' ? 'Antalya' : city} 
+                  onChange={handleCityChange}
+                  style={{
+                    backgroundColor: '#18181b',
+                    color: '#fff',
+                    border: '1px solid #3f3f46',
+                    borderRadius: '6px',
+                    padding: '2px 6px',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    outline: 'none'
+                  }}
+                >
+                  {SEHIRLER.map(s => (
+                    <option key={s.name} value={s.name}>{s.name}</option>
+                  ))}
+                </select>
+              </div>
             </div>
+
             {weather ? (
               <div style={{ textAlign: 'right' }}>
                 <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#38bdf8' }}>{Math.round(weather.temperature)}°C</span>
