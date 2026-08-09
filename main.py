@@ -3,6 +3,7 @@ import textwrap
 import time
 import os
 import re
+import subprocess
 from datetime import datetime
 import requests
 import feedparser
@@ -10,22 +11,16 @@ from PIL import Image, ImageDraw, ImageFont
 from instagrapi import Client
 from dotenv import load_dotenv
 
+# .env dosyasındaki değişkenleri yüklüyoruz
+load_dotenv()
 
 # ==========================================
-# AYARLAR & API BİLGİLERİ
+# AYARLAR & API BİLGİLERİ (.env 'den Alınıyor)
 # ==========================================
-load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "-1004464489545")
 INSTAGRAM_SESSION_ID = os.getenv("INSTAGRAM_SESSION_ID")
-
-
-# Telegram Ayarları
-
-TELEGRAM_CHAT_ID = "-1004464489545"
-
-# Instagram Session ID
-
 
 KANAL_ADI = "@saatlikturkiye"
 WEBSITE_URL = "saatlikturkiye.com"
@@ -91,7 +86,7 @@ def haber_daha_once_paylasildi_mi(baslik, hafiza):
     return False
 
 # ==========================================
-# 1. HABER ÇEKME VE AI ÖZETLEME (NOKTALAMA KURALI EKLENDİ)
+# 1. HABER ÇEKME VE AI ÖZETLEME
 # ==========================================
 def haberleri_cek_ve_ozetle():
     print("🌐 1. RSS kaynaklarından haberler taranıyor...")
@@ -113,7 +108,7 @@ def haberleri_cek_ve_ozetle():
                     continue
                 
                 eklenen_sayi += 1
-                haber_havuzu += f"{eklenen_sayi}. Başlık: {baslik}\nÖzet: {ozet}\n\n"
+                haber_havuzu += f"{eklenen_sayi}. Başlık: {baslik}\nÖzet/Detay: {ozet}\n\n"
                 
                 ham_haberler.append({
                     "id": eklenen_sayi,
@@ -135,27 +130,27 @@ def haberleri_cek_ve_ozetle():
 
     print(f"✅ {eklenen_sayi} yeni haber toplandı. AI özetliyor...")
 
-    prompt = f"""Aşağıdaki haber havuzunu oku. En önemli 5 haberi seç.
-    
-    ÇOK ÖNEMLİ KURALLAR:
-    1. 'baslik' alanı olayı net anlatan 7-10 kelimelik TAM BİR HABER BAŞLIĞI olsun.
-    2. 'kisa_aciklama' alanı MAKSİMUM 120 KARAKTER ve NET KESİNTİSİZ CÜMLELERDEN oluşsun. KESİNLİKLE her cümlenin ve açıklamanın sonuna NOKTA (.) koy!
+    prompt = f"""Aşağıdaki haber havuzunu incele ve en önemli 5 haberi seç.
+
+    ÇOK ÖNEMLİ VE KESİN KURALLAR:
+    1. 'baslik' alanı olayı net anlatan tam bir haber başlığı olsun.
+    2. 'kisa_aciklama' alanı KESİNLİKLE BAŞLIĞIN BİREBİR TEKRARI OLMASIN! Olayın detayını, nedenini veya arka planını anlatan TAM 2 veya 3 CÜMLE (yaklaşık 130-170 karakter) olsun. Her cümlenin sonuna nokta (.) koy!
     3. 'detay' alanı Instagram açıklaması için 3-4 cümlelik detaylı metin olsun. Cümle sonlarına mutlaka nokta koy.
     4. KESİNLİKLE çift tırnak (") KULLANMA! Tırnak gerekirse tek tırnak (') kullan.
-    
+
     SADECE geçerli JSON formatı döndür:
     {{
       "maddeler": [
         {{
           "id": 1,
-          "baslik": "İçişleri Bakanlığı Kararıyla Menderes Belediye Başkanı İlkay Çiçek Görevden Uzaklaştırıldı",
-          "kisa_aciklama": "Başkan İlkay Çiçek hakkında yürütülen soruşturma nedeniyle görevden alındı. Yerine vekil atanması bekleniyor.",
-          "detay": "İçişleri Bakanlığı tarafından yürütülen adli soruşturma kapsamında Menderes Belediye Başkanı İlkay Çiçek görevinden uzaklaştırıldı. Kararın detayları kamuoyuyla paylaşılırken yeni belediye başkan vekilinin önümüzdeki günlerde meclis üyeleri arasından seçileceği bildirildi.",
-          "kategori": "SİYASET"
+          "baslik": "Netanyahu Ateşkes Planını Reddetti",
+          "kisa_aciklama": "İsrail Başbakanı Netanyahu, sunulan son teklifin şartları karşılamadığını belirterek anlaşmayı imzalamadı. Karar sonrası bölgedeki gerilim yeniden tırmanışa geçti. Uluslararası kamuoyundan tepkiler yükseliyor.",
+          "detay": "İsrail Başbakanı Binyamin Netanyahu, Hamas ile yürütülen müzakerelerde sunulan yeni ateşkes taslağını kabul etmediğini duyurdu. Güvenlik kabinesiyle yapılan toplantının ardından açıklama yapan yetkililer, askeri operasyonların devam edeceğini bildirdi. Kararın ardından uluslararası toplumdan barış çağrıları yineledi.",
+          "kategori": "ULUSLARARASI"
         }}
       ]
     }}
-    
+
     Haber Havuzu:
     {haber_havuzu}"""
 
@@ -164,7 +159,7 @@ def haberleri_cek_ve_ozetle():
     payload = {
         "model": "llama-3.3-70b-versatile",
         "messages": [
-            {"role": "system", "content": "You are a professional news editor JSON generator. Always use proper sentence endings with periods."},
+            {"role": "system", "content": "You are a senior news editor. Never repeat the news title inside the short summary. Always write 2-3 distinct descriptive sentences for the summary with proper periods."},
             {"role": "user", "content": prompt}
         ],
         "response_format": {"type": "json_object"},
@@ -198,21 +193,24 @@ def haberleri_cek_ve_ozetle():
                 })
                 islenen_basliklar.append(item.get("baslik"))
 
+            # Klasör yoksa (public) otomatik oluşturur
+            os.makedirs(os.path.dirname(WEB_JSON_DOSYASI), exist_ok=True)
+
             with open(WEB_JSON_DOSYASI, "w", encoding="utf-8") as wf:
                 json.dump(web_news_list, wf, ensure_ascii=False, indent=2)
             
             hafizaya_kaydet(islenen_basliklar)
-            print("🌐 'news.json' başarıyla üretildi.")
+            print("🌐 'public/news.json' başarıyla üretildi.")
             return ai_data, web_news_list
     except Exception as e:
         print(f"❌ AI İşleme Hatası: {e}")
         return None, None
 
 # ==========================================
-# 2. GÖRSEL ÇİZİM İŞLEMLERİ (OTOMATİK NOKTA KONTROLÜ)
+# 2. GÖRSEL ÇİZİM İŞLEMLERİ
 # ==========================================
 def gorsel_olustur(ai_maddeler):
-    print("🎨 2. Noktalama işaretleri denetlenmiş görseller çiziliyor...")
+    print("🎨 2. Görseller çiziliyor...")
     
     def ciz(genislik, yukseklik, dosya_adi):
         img = Image.new("RGB", (genislik, yukseklik), color="#000000")
@@ -222,7 +220,7 @@ def gorsel_olustur(ai_maddeler):
             font_logo = ImageFont.truetype("arialbd.ttf", 34)
             font_kategori = ImageFont.truetype("arialbd.ttf", 15)
             font_baslik = ImageFont.truetype("arialbd.ttf", 18)
-            font_metin = ImageFont.truetype("arial.ttf", 14)
+            font_metin = ImageFont.truetype("arial.ttf", 13)
             font_footer = ImageFont.truetype("arialbd.ttf", 16)
         except Exception:
             font_logo = font_kategori = font_baslik = font_metin = font_footer = ImageFont.load_default()
@@ -249,22 +247,22 @@ def gorsel_olustur(ai_maddeler):
             
             # Başlık
             baslik_satirlar = textwrap.wrap(item.get("baslik", ""), width=65)
-            line_y = y_offset + 32
+            line_y = y_offset + 30
             for line in baslik_satirlar[:2]:
                 draw.text((55, line_y), line, fill="#ffffff", font=font_baslik)
                 line_y += 22
 
-            # Otomatik Nokta Güvenlik Kontrolü
+            # Nokta Kontrolü
             aciklama = item.get("kisa_aciklama", "").strip()
             if aciklama and aciklama[-1] not in [".", "!", "?"]:
                 aciklama += "."
 
-            # Açıklama Metni
-            ozet_satirlar = textwrap.wrap(aciklama, width=75)
+            # 2-3 Cümlelik Açıklama Metni (Taşmaması için 3 satır sınırı)
+            ozet_satirlar = textwrap.wrap(aciklama, width=82)
             line_y += 4
-            for ozet_line in ozet_satirlar:
+            for ozet_line in ozet_satirlar[:3]:
                 draw.text((55, line_y), ozet_line, fill="#d4d4d8", font=font_metin)
-                line_y += 18
+                line_y += 17
 
             y_offset += 183
 
@@ -279,7 +277,7 @@ def gorsel_olustur(ai_maddeler):
 
     ciz(1080, 1080, TG_OUTPUT_IMAGE)
     ciz(1080, 1080, IG_OUTPUT_IMAGE)
-    print("✅ Görseller eksiksiz ve noktalamaları tam olarak oluşturuldu.")
+    print("✅ Görseller başarıyla oluşturuldu.")
 
 # ==========================================
 # 3. TELEGRAM PAYLAŞIMI
@@ -332,7 +330,23 @@ def instagram_paylas(ai_maddeler):
         print(f"⚠️ Instagram Paylaşım Hatası (Akış devam ediyor): {e}")
 
 # ==========================================
-# 5. OTO-DÖNGÜ ÇALIŞTIRICI
+# 5. VERCEL WEB SİTESİ GÜNCELLEME (OTOMATİK GIT PUSH)
+# ==========================================
+def git_vercel_guncelle():
+    print("🚀 5. Web sitesi Vercel üzerine aktarılıyor...")
+    try:
+        subprocess.run(["git", "add", WEB_JSON_DOSYASI], check=True)
+        commit_msg = f"Auto news update: {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+        subprocess.run(["git", "commit", "-m", commit_msg], check=True)
+        subprocess.run(["git", "push"], check=True)
+        print("⚡ GitHub Push tamamlandı. Vercel siteyi canlıya alıyor!")
+    except subprocess.CalledProcessError as e:
+        print(f"ℹ️ Git güncelleme uyarısı (Değişiklik olmamış olabilir): {e}")
+    except Exception as e:
+        print(f"❌ Vercel Güncelleme Hatası: {e}")
+
+# ==========================================
+# 6. OTO-DÖNGÜ ÇALIŞTIRICI
 # ==========================================
 def gorevi_calistir():
     print(f"\n⏰ [{datetime.now().strftime('%H:%M:%S')}] Yeni tarama döngüsü başladı...")
@@ -342,6 +356,7 @@ def gorevi_calistir():
         gorsel_olustur(ai_maddeler)
         telegram_paylas(ai_maddeler)
         instagram_paylas(ai_maddeler)
+        git_vercel_guncelle()
         print("🎉 Bu saatlik tur tamamlandı.")
     else:
         print("ℹ️ Yeni paylaşılan haber yok veya sınır dolmadı.")
