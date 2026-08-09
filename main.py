@@ -13,9 +13,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ==========================================
-# AYARLAR & API BİLGİLERİ (.env)
-# ==========================================
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "-1004464489545")
@@ -37,8 +34,28 @@ TG_OUTPUT_IMAGE = "kusursuz_gundem_telegram.png"
 IG_OUTPUT_IMAGE = "kusursuz_gundem_instagram.png"
 
 # ==========================================
-# GERÇEK HABER GÖRSELİNİ RSS'DEN ÇEKME
+# KATEGORİ TÜRKÇE DÜZELTİCİ
 # ==========================================
+def kategori_duzelt(kat):
+    if not kat:
+        return "GÜNDEM"
+    kat = kat.strip().upper()
+    mapping = {
+        "SUC": "SUÇ",
+        "TRAFIG": "TRAFİK",
+        "TRAFIK": "TRAFİK",
+        "EKONOMI": "EKONOMİ",
+        "IC HABERLER": "İÇ HABERLER",
+        "SAGLIK": "SAĞLIK",
+        "EGITIM": "EĞİTİM",
+        "POLITIKA": "POLİTİKA",
+        "DUNYA": "DÜNYA",
+        "TEKNOLOJI": "TEKNOLOJİ",
+        "SPOR": "SPOR",
+        "MAGAZIN": "MAGAZİN"
+    }
+    return mapping.get(kat, kat)
+
 def gorsel_url_bul(entry):
     if hasattr(entry, 'enclosures') and entry.enclosures:
         for enc in entry.enclosures:
@@ -57,9 +74,6 @@ def gorsel_url_bul(entry):
 
     return "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&q=80"
 
-# ==========================================
-# HAFIZA İŞLEMLERİ
-# ==========================================
 def hafizayi_yukle():
     if os.path.exists(HAFIZA_DOSYASI):
         try:
@@ -75,7 +89,7 @@ def hafizaya_kaydet(yeni_basliklar):
         temiz = re.sub(r'[^\w\s]', '', b.lower().strip())
         hafiza.add(temiz)
     with open(HAFIZA_DOSYASI, "w", encoding="utf-8") as f:
-        json.dump(list(hafiza)[-300:], f, ensure_ascii=False, indent=2)
+        json.dump(list(hafiza)[-500:], f, ensure_ascii=False, indent=2)
 
 def haber_daha_once_paylasildi_mi(baslik, hafiza):
     temiz = re.sub(r'[^\w\s]', '', baslik.lower().strip())
@@ -85,7 +99,7 @@ def haber_daha_once_paylasildi_mi(baslik, hafiza):
     return False
 
 # ==========================================
-# 1. HABER ÇEKME VE AI ÖZETLEME (4 HABER)
+# HABER ÇEKME VE ARŞİV BİRİKTİRME
 # ==========================================
 def haberleri_cek_ve_ozetle():
     print("🌐 1. RSS kaynaklarından haberler taranıyor...")
@@ -131,11 +145,10 @@ def haberleri_cek_ve_ozetle():
 
     prompt = f"""Aşağıdaki haber havuzunu incele ve en önemli 4 haberi seç.
 
-    ÇOK ÖNEMLİ VE KESİN KURALLAR:
-    1. 'baslik' alanı olayı net anlatan tam bir haber başlığı olsun.
-    2. 'kisa_aciklama' alanı KESİNLİKLE BAŞLIĞIN BİREBİR TEKRARI OLMASIN! Olayın detayını, nedenini veya arka planını anlatan TAM 2 veya 3 CÜMLE (yaklaşık 120-150 karakter) olsun. Her cümlenin sonuna nokta (.) koy!
-    3. 'detay' alanı Instagram açıklaması için 3-4 cümlelik detaylı metin olsun. Cümle sonlarına mutlaka nokta koy.
-    4. KESİNLİKLE çift tırnak (") KULLANMA! Tırnak gerekirse tek tırnak (') kullan.
+    ÇOK ÖNEMLİ KURALLAR:
+    1. 'kisa_aciklama' alanı TAM 130-160 KARAKTER (yaklaşık 2 net cümle) olsun. Kesinlikle yarım bırakma ve nokta (.) koy!
+    2. 'kategori' alanını tam Türkçe büyük harflerle yaz (Örn: SUÇ, TRAFİK, EKONOMİ, İÇ HABERLER, DÜNYA, SAĞLIK, EĞİTİM, POLİTİKA, SPOR). Sakın 'SUC' veya 'TRAFIG' yazma!
+    3. KESİNLİKLE çift tırnak (") KULLANMA!
 
     SADECE geçerli JSON formatı döndür:
     {{
@@ -143,9 +156,9 @@ def haberleri_cek_ve_ozetle():
         {{
           "id": 1,
           "baslik": "Netanyahu Ateşkes Planını Reddetti",
-          "kisa_aciklama": "İsrail Başbakanı Netanyahu, sunulan son teklifin şartları karşılamadığını belirterek anlaşmayı imzalamadı. Karar sonrası bölgedeki gerilim yeniden tırmanışa geçti. Uluslararası kamuoyundan tepkiler yükseliyor.",
-          "detay": "İsrail Başbakanı Binyamin Netanyahu, Hamas ile yürütülen müzakerelerde sunulan yeni ateşkes taslağını kabul etmediğini duyurdu. Güvenlik kabinesiyle yapılan toplantının ardından açıklama yapan yetkililer, askeri operasyonların devam edeceğini bildirdi.",
-          "kategori": "ULUSLARARASI"
+          "kisa_aciklama": "İsrail Başbakanı Netanyahu, sunulan son teklifin şartları karşılamadığını belirterek anlaşmayı imzalamadı. Bölgedeki gerilim yeniden tırmanışa geçti.",
+          "detay": "İsrail Başbakanı Binyamin Netanyahu, Hamas ile yürütülen müzakerelerde sunulan yeni ateşkes taslağını kabul etmediğini duyurdu.",
+          "kategori": "DÜNYA"
         }}
       ]
     }}
@@ -158,7 +171,7 @@ def haberleri_cek_ve_ozetle():
     payload = {
         "model": "llama-3.3-70b-versatile",
         "messages": [
-            {"role": "system", "content": "You are a senior news editor. Select exactly 4 key news items. Never repeat the news title inside the short summary."},
+            {"role": "system", "content": "You are a senior Turkish news editor."},
             {"role": "user", "content": prompt}
         ],
         "response_format": {"type": "json_object"},
@@ -171,20 +184,23 @@ def haberleri_cek_ve_ozetle():
             clean_json = response.json()['choices'][0]['message']['content']
             ai_data = json.loads(clean_json).get("maddeler", [])
             
-            web_news_list = []
+            yeni_web_haberleri = []
             islenen_basliklar = []
-            simdi_str = datetime.now().strftime("%d %b %Y - %H:%M")
+            simdi_str = datetime.now().strftime("%d.%m.%Y - %H:%M")
 
             for item in ai_data[:4]:
                 item_id = item.get("id", 1)
                 matching_raw = ham_haberler[item_id - 1] if item_id <= len(ham_haberler) else ham_haberler[0]
                 
-                web_news_list.append({
-                    "id": item_id,
-                    "category": item.get("kategori", "GÜNDEM"),
+                temiz_kategori = kategori_duzelt(item.get("kategori"))
+                item["kategori"] = temiz_kategori # Görsel çizimi için de güncelle
+                
+                yeni_web_haberleri.append({
+                    "id": f"{int(time.time())}_{item_id}",
+                    "category": temiz_kategori,
                     "title": item.get("baslik"),
                     "summary": item.get("kisa_aciklama"),
-                    "fullText": f"<p>{item.get('detay')}</p>",
+                    "fullText": item.get('detay'),
                     "image": matching_raw["gorsel"],
                     "source": matching_raw["kaynak"],
                     "sourceUrl": matching_raw["link"],
@@ -192,33 +208,43 @@ def haberleri_cek_ve_ozetle():
                 })
                 islenen_basliklar.append(item.get("baslik"))
 
+            # ESKİ HABERLERİ YÜKLE VE ÜSTÜNE EKLE (ARŞİV OLUŞTURMA)
+            mevcut_haberler = []
+            if os.path.exists(WEB_JSON_DOSYASI):
+                try:
+                    with open(WEB_JSON_DOSYASI, "r", encoding="utf-8") as rf:
+                        mevcut_haberler = json.load(rf)
+                except Exception:
+                    mevcut_haberler = []
+
+            # Yeni haberleri en üste koy, eskileri altına diz (Maksimum 100 haber tut)
+            toplam_haberler = yeni_web_haberleri + mevcut_haberler
+            
+            # Mükerrer başlık kontrolü
+            gorulen_basliklar = set()
+            benzersiz_haberler = []
+            for h in toplam_haberler:
+                if h["title"] not in gorulen_basliklar:
+                    gorulen_basliklar.add(h["title"])
+                    benzersiz_haberler.append(h)
+
             os.makedirs(os.path.dirname(WEB_JSON_DOSYASI), exist_ok=True)
 
             with open(WEB_JSON_DOSYASI, "w", encoding="utf-8") as wf:
-                json.dump(web_news_list, wf, ensure_ascii=False, indent=2)
+                json.dump(benzersiz_haberler[:100], wf, ensure_ascii=False, indent=2)
             
             hafizaya_kaydet(islenen_basliklar)
-            print("🌐 'public/news.json' başarıyla üretildi.")
-            return ai_data[:4], web_news_list
+            print("🌐 'public/news.json' arşiv güncellendi.")
+            return ai_data[:4], benzersiz_haberler
     except Exception as e:
         print(f"❌ AI İşleme Hatası: {e}")
         return None, None
 
 # ==========================================
-# 2. BÜYÜTÜLMÜŞ FONT & 4 KARTLI GÖRSEL ÇİZİMİ
-# ==========================================
-# ==========================================
-# 1. AI PROMPT GÜNCELLEMESİ (Haber Özeti Sınırı)
-# ==========================================
-# prompt değişkeni içindeki kisa_aciklama kuralını şu şekilde tutun:
-# "kisa_aciklama": "Olayın detayını anlatan TAM 130-160 KARAKTER (yaklaşık 2 net cümle) yaz. Cümle sonuna nokta koy!"
-
-
-# ==========================================
-# 2. GÖRSEL ÇİZİM İŞLEMLERİ (Yeni Fontlar Uyumlu)
+# GÖRSEL ÇİZİMİ
 # ==========================================
 def gorsel_olustur(ai_maddeler):
-    print("🎨 Görseller yeni font boyutlarıyla çiziliyor...")
+    print("🎨 Görseller çiziliyor...")
     
     def ciz(genislik, yukseklik, dosya_adi):
         img = Image.new("RGB", (genislik, yukseklik), color="#000000")
@@ -233,7 +259,7 @@ def gorsel_olustur(ai_maddeler):
         except Exception:
             font_logo = font_kategori = font_baslik = font_metin = font_footer = ImageFont.load_default()
 
-        # Header (Üst Bar)
+        # Header
         draw.rectangle([(0, 0), (genislik, 95)], fill="#0d0d0d")
         draw.line([(0, 95), (genislik, 95)], fill="#e11d48", width=3)
         
@@ -243,32 +269,29 @@ def gorsel_olustur(ai_maddeler):
         tarih_str = datetime.now().strftime("%d.%m.%Y  |  %H:%M")
         draw.text((genislik - 260, 34), tarih_str, fill="#f4f4f5", font=font_footer)
 
-        # 4 Kart Düzeni (Yüksek Fontlara Göre Genişletilmiş)
         y_offset = 110
         kart_yukseklik = 215
 
         for i, item in enumerate(ai_maddeler[:4], 1):
-            # Kart Arka Planı
             draw.rectangle([(30, y_offset), (genislik - 30, y_offset + kart_yukseklik)], fill="#111113", outline="#27272a", width=1)
             draw.rectangle([(30, y_offset), (38, y_offset + kart_yukseklik)], fill="#2563eb")
             
-            # Kategori Etiketi (25px)
-            kat_text = f"#{i}  {item.get('kategori', 'GÜNDEM').upper()}"
+            # Kategori
+            kat_text = f"#{i}  {kategori_duzelt(item.get('kategori'))}"
             draw.text((55, y_offset + 10), kat_text, fill="#60a5fa", font=font_kategori)
             
-            # Başlık (28px - Kartın sağına kadar uzanır)
+            # Başlık
             baslik_satirlar = textwrap.wrap(item.get("baslik", ""), width=45)
             line_y = y_offset + 42
             for line in baslik_satirlar[:2]:
                 draw.text((55, line_y), line, fill="#ffffff", font=font_baslik)
                 line_y += 34
 
-            # Nokta Kontrolü
             aciklama = item.get("kisa_aciklama", "").strip()
             if aciklama and aciklama[-1] not in [".", "!", "?"]:
                 aciklama += "."
 
-            # Açıklama Metni (25px - width=65 yapılarak sağ boşluk kapatıldı)
+            # Açıklama Metni (Metin sağı dolsun diye width=65 tutuldu)
             ozet_satirlar = textwrap.wrap(aciklama, width=65)
             line_y += 6
             for ozet_line in ozet_satirlar[:3]:
@@ -277,7 +300,7 @@ def gorsel_olustur(ai_maddeler):
 
             y_offset += kart_yukseklik + 12
 
-        # Footer (Alt Bar)
+        # Footer
         draw.rectangle([(0, yukseklik - 55), (genislik, yukseklik)], fill="#0d0d0d")
         draw.line([(0, yukseklik - 55), (genislik, yukseklik - 55)], fill="#27272a", width=1)
         
@@ -288,85 +311,12 @@ def gorsel_olustur(ai_maddeler):
 
     ciz(1080, 1080, TG_OUTPUT_IMAGE)
     ciz(1080, 1080, IG_OUTPUT_IMAGE)
-    print("🎨 2. Görseller çiziliyor (Büyük fontlu 4 kart)...")
-    
-    def ciz(genislik, yukseklik, dosya_adi):
-        img = Image.new("RGB", (genislik, yukseklik), color="#000000")
-        draw = ImageDraw.Draw(img)
-        
-        try:
-            font_logo = ImageFont.truetype("arialbd.ttf", 36)
-            font_kategori = ImageFont.truetype("arialbd.ttf", 25) # Büyütüldü
-            font_baslik = ImageFont.truetype("arialbd.ttf", 28)   # Büyütüldü
-            font_metin = ImageFont.truetype("arial.ttf", 25)      # Büyütüldü
-            font_footer = ImageFont.truetype("arialbd.ttf", 20)
-        except Exception:
-            font_logo = font_kategori = font_baslik = font_metin = font_footer = ImageFont.load_default()
+    print("✅ Görseller başarıyla oluşturuldu.")
 
-        # Header
-        draw.rectangle([(0, 0), (genislik, 95)], fill="#0d0d0d")
-        draw.line([(0, 95), (genislik, 95)], fill="#e11d48", width=3)
-        
-        draw.text((40, 28), "SAATLİK", fill="#ffffff", font=font_logo)
-        draw.text((225, 28), "TÜRKİYE", fill="#e11d48", font=font_logo)
-        
-        tarih_str = datetime.now().strftime("%d.%m.%Y  |  %H:%M")
-        draw.text((genislik - 240, 36), tarih_str, fill="#f4f4f5", font=font_footer)
-
-        # 4 Kart için Y Düzeneği (Daha geniş kartlar)
-        y_offset = 115
-        kart_yukseklik = 210  # Kartlar genişletildi
-
-        for i, item in enumerate(ai_maddeler[:4], 1):
-            # Kart Arka Planı
-            draw.rectangle([(30, y_offset), (genislik - 30, y_offset + kart_yukseklik)], fill="#111113", outline="#27272a", width=1)
-            draw.rectangle([(30, y_offset), (37, y_offset + kart_yukseklik)], fill="#2563eb")
-            
-            # Kategori Etiketi
-            kat_text = f"#{i}  {item.get('kategori', 'GÜNDEM').upper()}"
-            draw.text((55, y_offset + 12), kat_text, fill="#60a5fa", font=font_kategori)
-            
-            # Başlık (Büyük Font)
-            baslik_satirlar = textwrap.wrap(item.get("baslik", ""), width=56)
-            line_y = y_offset + 38
-            for line in baslik_satirlar[:2]:
-                draw.text((55, line_y), line, fill="#ffffff", font=font_baslik)
-                line_y += 28
-
-            # Nokta Kontrolü
-            aciklama = item.get("kisa_aciklama", "").strip()
-            if aciklama and aciklama[-1] not in [".", "!", "?"]:
-                aciklama += "."
-
-            # Açıklama Metni (Büyük Font)
-            ozet_satirlar = textwrap.wrap(aciklama, width=70)
-            line_y += 6
-            for ozet_line in ozet_satirlar[:3]:
-                draw.text((55, line_y), ozet_line, fill="#d4d4d8", font=font_metin)
-                line_y += 23
-
-            y_offset += kart_yukseklik + 15  # Kart arası boşluk
-
-        # Footer
-        draw.rectangle([(0, yukseklik - 55), (genislik, yukseklik)], fill="#0d0d0d")
-        draw.line([(0, yukseklik - 55), (genislik, yukseklik - 55)], fill="#27272a", width=1)
-        
-        draw.text((40, yukseklik - 38), f"🌐 {WEBSITE_URL.upper()}", fill="#ffffff", font=font_footer)
-        draw.text((genislik - 320, yukseklik - 38), f"📢 Telegram: {KANAL_ADI}", fill="#38bdf8", font=font_footer)
-
-        img.save(dosya_adi)
-
-    ciz(1080, 1080, TG_OUTPUT_IMAGE)
-    ciz(1080, 1080, IG_OUTPUT_IMAGE)
-    print("✅ Görseller büyük fontlarla başarıyla oluşturuldu.")
-
-# ==========================================
-# 3. TELEGRAM PAYLAŞIMI
-# ==========================================
 def telegram_paylas(ai_maddeler):
-    print("✈️ 3. Telegram'a gönderiliyor...")
+    print("✈️ Telegram'a gönderiliyor...")
     caption = f"🔴 **SAATLİK TÜRKİYE — SON DAKİKA GÜNDEM**\n\n"
-    caption += f"🌐 Canlı haber akışı ve detaylar: {WEBSITE_URL}\n"
+    caption += f"🌐 Tüm geçmiş haberler ve detaylar: {WEBSITE_URL}\n"
     caption += f"📢 Resmi Kanalımız: {KANAL_ADI}"
 
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
@@ -374,21 +324,14 @@ def telegram_paylas(ai_maddeler):
         with open(TG_OUTPUT_IMAGE, "rb") as photo:
             payload = {"chat_id": TELEGRAM_CHAT_ID, "caption": caption, "parse_mode": "Markdown"}
             files = {"photo": photo}
-            res = requests.post(url, data=payload, files=files)
-            if res.status_code == 200:
-                print("✅ Telegram paylaşımı BAŞARILI!")
-            else:
-                print(f"❌ Telegram Hatası: {res.text}")
+            requests.post(url, data=payload, files=files)
+            print("✅ Telegram paylaşımı BAŞARILI!")
     except Exception as e:
-        print(f"❌ Telegram İstek Hatası: {e}")
+        print(f"❌ Telegram Hatası: {e}")
 
-# ==========================================
-# 4. INSTAGRAM PAYLAŞIMI
-# ==========================================
 def instagram_paylas(ai_maddeler):
-    print("📸 4. Instagram'a gönderiliyor...")
+    print("📸 Instagram'a gönderiliyor...")
     if not INSTAGRAM_SESSION_ID:
-        print("⚠️ Instagram Session ID bulunamadı.")
         return
 
     caption = "🔴 SAATLİK TÜRKİYE — GÜNÜN ÖNE ÇIKAN HABERLERİ\n\n"
@@ -408,27 +351,19 @@ def instagram_paylas(ai_maddeler):
         cl.photo_upload(IG_OUTPUT_IMAGE, caption)
         print("✅ Instagram paylaşımı BAŞARILI!")
     except Exception as e:
-        print(f"⚠️ Instagram Paylaşım Hatası (Akış devam ediyor): {e}")
+        print(f"⚠️ Instagram Hatası: {e}")
 
-# ==========================================
-# 5. VERCEL WEB SİTESİ GÜNCELLEME
-# ==========================================
 def git_vercel_guncelle():
-    print("🚀 5. Web sitesi Vercel üzerine aktarılıyor...")
+    print("🚀 Web sitesi Vercel üzerine aktarılıyor...")
     try:
         subprocess.run(["git", "add", WEB_JSON_DOSYASI], check=True)
         commit_msg = f"Auto news update: {datetime.now().strftime('%Y-%m-%d %H:%M')}"
         subprocess.run(["git", "commit", "-m", commit_msg], check=True)
         subprocess.run(["git", "push"], check=True)
-        print("⚡ GitHub Push tamamlandı. Vercel siteyi canlıya alıyor!")
-    except subprocess.CalledProcessError as e:
-        print(f"ℹ️ Git güncelleme uyarısı (Değişiklik olmamış olabilir): {e}")
+        print("⚡ GitHub Push tamamlandı.")
     except Exception as e:
-        print(f"❌ Vercel Güncelleme Hatası: {e}")
+        print(f"ℹ️ Git güncelleme bildirimi: {e}")
 
-# ==========================================
-# 6. OTO-DÖNGÜ ÇALIŞTIRICI
-# ==========================================
 def gorevi_calistir():
     print(f"\n⏰ [{datetime.now().strftime('%H:%M:%S')}] Yeni tarama döngüsü başladı...")
     ai_maddeler, web_news = haberleri_cek_ve_ozetle()
@@ -438,19 +373,13 @@ def gorevi_calistir():
         telegram_paylas(ai_maddeler)
         instagram_paylas(ai_maddeler)
         git_vercel_guncelle()
-        print("🎉 Bu saatlik tur tamamlandı.")
-    else:
-        print("ℹ️ Yeni paylaşılan haber yok veya sınır dolmadı.")
+        print("🎉 Saatlik tur tamamlandı.")
 
 if __name__ == "__main__":
     print("🚀 SAATLİK TÜRKİYE BOTU CANLIYA ALINDI.")
-    print("🔄 Bot kesintisiz olarak her 1 saatte bir çalışacak...")
-    
     while True:
         try:
             gorevi_calistir()
         except Exception as global_err:
-            print(f"❌ Beklenmeyen sistem hatası: {global_err}")
-            
-        print("⏳ 1 saat boyunca bekleniyor (Sonraki tarama otomatik yapılacak)...\n")
+            print(f"❌ Sistem Hatası: {global_err}")
         time.sleep(3600)
