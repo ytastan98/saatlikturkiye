@@ -8,6 +8,7 @@ const normalizeCat = (cat) => {
     'SUC': 'SUÇ',
     'TRAFIG': 'TRAFİK',
     'TRAFIK': 'TRAFİK',
+    'TRAFFIK': 'TRAFİK',
     'EKONOMI': 'EKONOMİ',
     'IC HABERLER': 'İÇ HABERLER',
     'SAGLIK': 'SAĞLIK',
@@ -29,6 +30,7 @@ export default function Home() {
   const [city, setCity] = useState('Konum alınıyor...');
 
   useEffect(() => {
+    // 1. Haberleri Çek
     fetch('/news.json')
       .then((res) => res.json())
       .then((data) => {
@@ -41,26 +43,56 @@ export default function Home() {
       })
       .catch(() => setNews([]));
 
-    fetch('https://ipapi.co/json/')
-      .then((res) => res.json())
-      .then((geoData) => {
-        const userCity = geoData.city || 'İstanbul';
-        const lat = geoData.latitude || 41.0082;
-        const lon = geoData.longitude || 28.9784;
+    // 2. Yedekli IP Konum Servisi (İstemci Tabanlı)
+    const getLocationAndWidgets = async () => {
+      let userCity = 'İstanbul';
+      let lat = 41.0082;
+      let lon = 28.9784;
 
-        setCity(userCity);
+      try {
+        // 1. Tercih: ipapi.co
+        const res1 = await fetch('https://ipapi.co/json/');
+        if (res1.ok) {
+          const geo1 = await res1.json();
+          if (geo1.city && geo1.latitude && geo1.longitude) {
+            userCity = geo1.city;
+            lat = geo1.latitude;
+            lon = geo1.longitude;
+          }
+        } else {
+          throw new Error('ipapi limit');
+        }
+      } catch (err1) {
+        try {
+          // 2. Tercih (Yedek Servis): ip-api.com
+          const res2 = await fetch('https://ip-api.com/json/?fields=status,city,lat,lon');
+          const geo2 = await res2.json();
+          if (geo2.status === 'success' && geo2.city) {
+            userCity = geo2.city;
+            lat = geo2.lat;
+            lon = geo2.lon;
+          }
+        } catch (err2) {
+          console.log('Konum servislerine ulaşılamadı, varsayılan İstanbul kullanılıyor.');
+        }
+      }
 
-        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
-          .then(res => res.json())
-          .then(w => setWeather(w.current_weather))
-          .catch(() => {});
+      setCity(userCity);
 
-        fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=13`)
-          .then(res => res.json())
-          .then(p => setPrayerTimes(p.data.timings))
-          .catch(() => {});
-      })
-      .catch(() => setCity('İstanbul'));
+      // Hava Durumu Verisi
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+        .then(res => res.json())
+        .then(w => setWeather(w.current_weather))
+        .catch(() => {});
+
+      // Ezan Vakiti Verisi
+      fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=13`)
+        .then(res => res.json())
+        .then(p => setPrayerTimes(p.data?.timings))
+        .catch(() => {});
+    };
+
+    getLocationAndWidgets();
   }, []);
 
   useEffect(() => {
@@ -82,7 +114,7 @@ export default function Home() {
   return (
     <div style={{ backgroundColor: '#09090b', color: '#f4f4f5', minHeight: '100vh', fontFamily: 'system-ui, sans-serif', overflowX: 'hidden' }}>
       
-      {/* HEADER (Mobil Taşma Korumalı) */}
+      {/* HEADER */}
       <header style={{ borderBottom: '1px solid #27272a', backgroundColor: '#000', padding: '12px 16px', position: 'sticky', top: 0, zIndex: 50, width: '100%', boxSizing: 'border-box' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           
@@ -174,34 +206,37 @@ export default function Home() {
         {/* HABER LİSTESİ */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
           {filteredNews.length > 0 ? (
-            filteredNews.map((item) => (
-              <article key={item.id} style={{ backgroundColor: '#111113', border: '1px solid #27272a', borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                {item.image && (
-                  <img src={item.image} alt={item.title} style={{ width: '100%', height: '170px', objectFit: 'cover' }} />
-                )}
-                <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                  <div>
-                    <span style={{ color: '#60a5fa', fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.5px' }}>
-                      #{item.category}
-                    </span>
-                    <h3 style={{ fontSize: '16px', fontWeight: '700', margin: '6px 0', lineHeight: '1.4' }}>
-                      {item.title}
-                    </h3>
-                    <p style={{ color: '#a1a1aa', fontSize: '13px', lineHeight: '1.5', margin: '0 0 12px 0' }}>
-                      {item.summary}
-                    </p>
+            filteredNews.map((item) => {
+              const imageSrc = item.imageUrl || item.image; // GÖRSEL DÜZELTMESİ
+              return (
+                <article key={item.id} style={{ backgroundColor: '#111113', border: '1px solid #27272a', borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                  {imageSrc && (
+                    <img src={imageSrc} alt={item.title} style={{ width: '100%', height: '170px', objectFit: 'cover' }} />
+                  )}
+                  <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div>
+                      <span style={{ color: '#60a5fa', fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+                        #{item.category}
+                      </span>
+                      <h3 style={{ fontSize: '16px', fontWeight: '700', margin: '6px 0', lineHeight: '1.4' }}>
+                        {item.title}
+                      </h3>
+                      <p style={{ color: '#a1a1aa', fontSize: '13px', lineHeight: '1.5', margin: '0 0 12px 0' }}>
+                        {item.summary}
+                      </p>
+                    </div>
+                    <div style={{ borderTop: '1px solid #27272a', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#71717a' }}>
+                      <span>📅 {item.date}</span>
+                      {item.sourceUrl && (
+                        <a href={item.sourceUrl} target="_blank" rel="noreferrer" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: '600' }}>
+                          Detay →
+                        </a>
+                      )}
+                    </div>
                   </div>
-                  <div style={{ borderTop: '1px solid #27272a', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#71717a' }}>
-                    <span>📅 {item.date}</span>
-                    {item.sourceUrl && (
-                      <a href={item.sourceUrl} target="_blank" rel="noreferrer" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: '600' }}>
-                        Detay →
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </article>
-            ))
+                </article>
+              );
+            })
           ) : (
             <p style={{ color: '#71717a', gridColumn: '1/-1', textAlign: 'center', padding: '30px' }}>Haber bulunamadı.</p>
           )}
