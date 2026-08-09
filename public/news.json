@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "id": "1786291864_1",
+    "category": "DÜNYA",
+    "title": "Suriye ve Rusya Anlaşmaya Vardı",
+    "summary": "Suriye ve Rusya, Hmeymim ve Tartus için bir anlaşmaya vardı. Bu anlaşma, iki ülke arasındaki ilişkileri güçlendirecek.",
+    "fullText": "Suriye ve Rusya arasında varılan anlaşma, Hmeymim ve Tartus bölgelerinde iş birliğini artırarak bölgesel istikrarı güçlendirecek.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a78a15fcb247560.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/suriye-rusya-arasinda-hmeymim-ve-tartus-icin-anlasma-saglandi-h1556208",
+    "date": "09.08.2026 - 19:11"
+  },
+  {
+    "id": "1786291864_2",
+    "category": "SUÇ",
+    "title": "İstanbul'da Suç Örgütü Üyesi Yakalandı",
+    "summary": "İstanbul'da bir suç örgütü üyesi, tırın gizli bölmesinde yakalandı. Bu operasyon, şehrin güvenliğini artırmaya yönelik önemli bir adım.",
+    "fullText": "İstanbul'da gerçekleştirilen operasyon, suç örgütlerinin faaliyetlerine karşı etkili bir mücadele verdiğini gösteriyor.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a789484098f6159.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
+    "date": "09.08.2026 - 19:11"
+  },
+  {
+    "id": "1786291864_3",
+    "category": "TRAFİK",
+    "title": "Gökçeada'da Ölümlü Kaza",
+    "summary": "Gökçeada'da park halindeki bir otomobile çarpan motosikletteki iki kişi hayatını kaybetti. Bu kaza, trafik güvenliği konusunda yeniden düşünmemizi gerektiriyor.",
+    "fullText": "Gökçeada'da meydana gelen ölümlü kaza, sürücülerin dikkatli ve tedbirli olması gerektiğini bir kez daha hatırlatıyor.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/canakkale-kaza-aa-2480762.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/turkiye/gokceadada-park-halindeki-otomobile-carpan-motosikletteki-2-kisi-oldu-953487.html",
+    "date": "09.08.2026 - 19:11"
+  },
+  {
+    "id": "1786291864_4",
+    "category": "EKONOMİ",
+    "title": "Avusturya Şansölyesi Türkiye'yi Ziyaret Edecek",
+    "summary": "Avusturya Şansölyesi, yarın Türkiye'yi ziyaret edecek. Bu ziyaret, iki ülke arasındaki ekonomik ve siyasi ilişkileri güçlendirecek.",
+    "fullText": "Avusturya Şansölyesinin Türkiye ziyaretinin, iki ülke arasındaki iş birliğini ve ticaretini artırması bekleniyor.",
+    "imageUrl": "https://web-cdnprod.aa.com.tr/uploads/Contents/2026/08/09/thumbs_b_c_d5ade91afbac1bd45a9e9af27e936e0e.jpg",
+    "source": "Anadolu Ajansı Güncel Haberler",
+    "sourceUrl": "https://www.aa.com.tr/tr/gundem/avusturya-sansolyesi-stocker-yarin-turkiyeyi-ziyaret-edecek/4022539",
+    "date": "09.08.2026 - 19:11"
+  }
+]
