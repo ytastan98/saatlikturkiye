@@ -1,5 +1,49 @@
 [
   {
+    "id": "1786305386_1",
+    "category": "SUÇ",
+    "title": "Mersin'de Çakmak Gazı Soluduğu İddia Edilen Çocuk Öldü",
+    "summary": "Mersin'de bir çocuk, çakmak gazı soluduğu iddia edilerek hastaneye kaldırıldı. Ancak yapılan tüm müdahalelere rağmen çocuk hayatını kaybetti.",
+    "fullText": "Olay, Mersin'in bir mahallesinde meydana geldi. Çocuk, çakmak gazı soluduğu iddia edilerek hastaneye kaldırıldı. Hastanede yapılan tüm müdahalelere rağmen çocuk hayatını kaybetti. Olayın nedeni henüz tam olarak bilinmiyor.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a78db2eaea9d723.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/mersinde-cakmak-gazi-soludugu-iddia-edilen-cocuk-oldu-h1556223",
+    "date": "09.08.2026 - 22:56"
+  },
+  {
+    "id": "1786305386_2",
+    "category": "DÜNYA",
+    "title": "Trump, İran'la Müzakereleri Sessizce Yürüttüklerini Belirtti",
+    "summary": "Eski ABD Başkanı Donald Trump, İran'la müzakereleri sessizce yürüttüklerini belirtti. Trump, bu müzakerelerin ABD'nin çıkarlarına uygun olduğunu söyledi.",
+    "fullText": "Trump, bir röportajda İran'la müzakereleri sessizce yürüttüklerini belirtti. Trump, bu müzakerelerin ABD'nin çıkarlarına uygun olduğunu ve bölgede istikrarı sağlamayı hedeflediğini söyledi. Ancak Trump'ın bu açıklamaları, bazı kesimler tarafından eleştirildi.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2440000/trump-iran-2440353.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/dunya/trump-iranla-muzakereleri-sessizce-yuruttuklerini-belirtti-953494.html",
+    "date": "09.08.2026 - 22:56"
+  },
+  {
+    "id": "1786305386_3",
+    "category": "İÇ HABERLER",
+    "title": "6 Şubat Depremleri Sonrası 455 Bin 357 Bağımsız Bölüm Tamamlandı",
+    "summary": "6 Şubat depremleri sonrasında 455 bin 357 bağımsız bölüm tamamlandı ve teslim edildi. Bu sayının, depremzedelerin ihtiyaçlarını karşılamak için yeterli olduğu belirtildi.",
+    "fullText": "6 Şubat depremleri sonrasında, depremzedelerin ihtiyaçlarını karşılamak için büyük bir çalışma yürütüldü. Bu çalışmanın sonucunda, 455 bin 357 bağımsız bölüm tamamlandı ve teslim edildi. Bu sayının, depremzedelerin ihtiyaçlarını karşılamak için yeterli olduğu belirtildi.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2426000/deprem-konutu-trt-2427307.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/turkiye/6-subat-depremleri-sonrasi-455-bin-357-bagimsiz-bolum-tamamlanip-teslim-edildi-953493.html",
+    "date": "09.08.2026 - 22:56"
+  },
+  {
+    "id": "1786305386_4",
+    "category": "TRAFİK",
+    "title": "Manisa'da Çıkan Orman Yangınına Müdahale Ediliyor",
+    "summary": "Manisa'da bir orman yangını çıktı. Yangına, itfaiye ve orman yangınıyla mücadele ekipleri tarafından müdahale ediliyor.",
+    "fullText": "Manisa'da bir orman yangını çıktı. Yangın, bölgede büyük bir panik yaratırken, itfaiye ve orman yangınıyla mücadele ekipleri tarafından müdahale ediliyor. Yangının nedeni henüz bilinmiyor. Ancak yangının, bölgede büyük bir tahribata neden olabileceği belirtildi.",
+    "imageUrl": "https://web-cdnprod.aa.com.tr/uploads/Contents/2026/08/09/thumbs_b_c_6e7ba33ed29e4286ef61d50c18b72836.jpg",
+    "source": "Anadolu Ajansı Güncel Haberler",
+    "sourceUrl": "https://www.aa.com.tr/tr/gundem/manisada-cikan-orman-yanginina-mudahale-ediliyor/4022571",
+    "date": "09.08.2026 - 22:56"
+  },
+  {
     "id": "1786301749_1",
     "category": "GÜNDEM",
     "title": "Çerçeve Yasa teklifi komisyondan geçti",
