@@ -1,5 +1,49 @@
 [
   {
+    "id": "1786313315_1",
+    "category": "SUÇ",
+    "title": "Antalya'da Galeri Kundaklandı!",
+    "summary": "Antalya'da bir galeri kundaklandı. Olayda şüpheli kaçarken yakalandı. ",
+    "fullText": "Antalya'da bir galerinin kundaklanması sonucu yangın çıktı. Yangın kısa sürede söndürüldü.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/10/6a78eb503fd44451.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/antalyada-galeri-kundaklandi-supheli-kacarken-yakalandi-h1556233",
+    "date": "10.08.2026 - 01:08"
+  },
+  {
+    "id": "1786313315_2",
+    "category": "SPOR",
+    "title": "Arda Güler PSG'ye Mi Gidiyor?",
+    "summary": "Fransız basınında Arda Güler'in PSG'ye transfer olacağı iddiaları yayıldı. Transfer için 18 milyon euroluk teklif yapıldığı iddia edildi.",
+    "fullText": "Fransız basınında çıkan haberlere göre Arda Güler, PSG'ye transfer olabilir.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/10/6a78f2171cdf7940.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/arda-guler-psgye-mi-gidiyor-fransiz-basinindan-18-milyon-euroluk-teklif-iddiasi-h1556236",
+    "date": "10.08.2026 - 01:08"
+  },
+  {
+    "id": "1786313315_3",
+    "category": "İÇ HABERLER",
+    "title": "Şehit Aileleri ve Gazilerin Haklarına İlişkin Düzenleme",
+    "summary": "Şehit aileleri ve gazilerin haklarına ilişkin düzenleme Genel Kurul'da kabul edildi. Düzenlemeyle birlikte şehit aileleri ve gazilerin hakları güvence altına alındı.",
+    "fullText": "Şehit aileleri ve gazilerin haklarına ilişkin düzenleme, Genel Kurul'da kabul edildi.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2426000/tbmmaa-2426540.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/gundem/sehit-aileleri-ve-gazilerin-haklarina-yonelik-duzenleme-genel-kurulda-kabul-edildi-953492.html",
+    "date": "10.08.2026 - 01:08"
+  },
+  {
+    "id": "1786313315_4",
+    "category": "TEKNOLOJİ",
+    "title": "Selçuk Bayraktar TEKNOFEST Dron Şampiyonası'na Katıldı",
+    "summary": "Selçuk Bayraktar, Şırnak'ta düzenlenen TEKNOFEST Dron Şampiyonası'na katıldı. Bayraktar, teknoloji ikliminin Güneydoğu'dan eseceğini söyledi.",
+    "fullText": "Selçuk Bayraktar, Şırnak'ta düzenlenen TEKNOFEST Dron Şampiyonası'na katıldı.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/selcuk-bayraktar-sirnak-aa-2480779.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/bilim-teknoloji/selcuk-bayraktar-sirnakta-teknofest-dron-sampiyonasina-katildi-953497.html",
+    "date": "10.08.2026 - 01:08"
+  },
+  {
     "id": "1786309677_1",
     "category": "GÜNDEM",
     "title": "Şehit Ailelerine Yeni Haklar",
