@@ -189,6 +189,35 @@ def haberleri_cek_ve_ozetle():
             simdi_str = datetime.now().strftime("%d.%m.%Y - %H:%M")
 
             for item in ai_data[:4]:
+                item_title = item.get("baslik", "").lower()
+                
+                # Akıllı Eşleştirme: AI başlığı ile orijinal RSS başlığı arasındaki kelimeleri karşılaştırır
+                best_match = ham_haberler[0]
+                max_score = 0
+                
+                for raw in ham_haberler:
+                    raw_title = raw["orijinal_baslik"].lower()
+                    # Ortak kelime sayısını bul
+                    score = sum(1 for word in item_title.split() if len(word) > 3 and word in raw_title)
+                    if score > max_score:
+                        max_score = score
+                        best_match = raw
+
+                temiz_kategori = kategori_duzelt(item.get("kategori"))
+                item["kategori"] = temiz_kategori
+                
+                yeni_web_haberleri.append({
+                    "id": f"{int(time.time())}_{item.get('id', 1)}",
+                    "category": temiz_kategori,
+                    "title": item.get("baslik"),
+                    "summary": item.get("kisa_aciklama"),
+                    "fullText": item.get('detay'),
+                    "image": best_match["gorsel"],  # Artık %100 doğru haber resmi!
+                    "source": best_match["kaynak"],
+                    "sourceUrl": best_match["link"],
+                    "date": simdi_str
+                })
+                islenen_basliklar.append(item.get("baslik"))
                 item_id = item.get("id", 1)
                 matching_raw = ham_haberler[item_id - 1] if item_id <= len(ham_haberler) else ham_haberler[0]
                 
