@@ -207,20 +207,28 @@ def groq_ile_ozetle(ham_haberler):
     if not GROQ_API_KEY:
         return None
 
+    # AI'ya haberleri indeksleriyle gönderiyoruz
+    haber_listesi_prompt = [
+        {"orijinal_id": idx, "baslik": h['orijinal_baslik']}
+        for idx, h in enumerate(ham_haberler)
+    ]
+
     prompt = f"""
     Aşağıdaki haber listesini incele. En önemli ve ilgi çekici 4 haberi seç.
     Seçtiğin haberleri Türkçe olarak yeniden özgünleştir.
 
     ÖNEMLİ KURALLAR:
-    1. "baslik": Haber başlığı çarpıcı ve net olmalı (6-10 kelime).
-    2. "kisa_aciklama": HER HABER İÇİN KESİNLİKLE VE İSTİSNASIZ TAM 2 CÜMLE YAZACAKSIN.
-    3. "kategori": GÜNDEM / İÇ HABERLER / SUÇ / TRAFİK / EKONOMİ / DÜNYA / TEKNOLOJİ kategorilerinden biri olmalı.
+    1. "orijinal_id": Seçtiğin haberin aşağıdaki listedeki "orijinal_id" numarasını AYNEN YAZMALISIN.
+    2. "baslik": Haber başlığı çarpıcı ve net olmalı (6-10 kelime).
+    3. "kisa_aciklama": HER HABER İÇİN KESİNLİKLE VE İSTİSNASIZ TAM 2 CÜMLE YAZACAKSIN.
+    4. "kategori": GÜNDEM / İÇ HABERLER / SUÇ / TRAFİK / EKONOMİ / DÜNYA / TEKNOLOJİ kategorilerinden biri olmalı.
 
     İstenen JSON Yapısı:
     {{
       "maddeler": [
         {{
           "id": 1,
+          "orijinal_id": 0,
           "baslik": "Dikkat çekici haber başlığı",
           "kisa_aciklama": "Olayı anlatan birinci cümle. Detay veren ikinci cümle.",
           "detay": "Haberin detaylı açıklaması",
@@ -230,7 +238,7 @@ def groq_ile_ozetle(ham_haberler):
     }}
 
     Haber Listesi:
-    {json.dumps([h['orijinal_baslik'] for h in ham_haberler], ensure_ascii=False)}
+    {json.dumps(haber_listesi_prompt, ensure_ascii=False)}
     """
 
     url = "https://api.groq.com/openai/v1/chat/completions"
@@ -242,7 +250,7 @@ def groq_ile_ozetle(ham_haberler):
             {"role": "user", "content": prompt}
         ],
         "response_format": {"type": "json_object"},
-        "temperature": 0.2
+        "temperature": 0.1
     }
 
     try:
@@ -267,7 +275,7 @@ def haberleri_islemden_gecir():
                     "orijinal_baslik": entry.get("title", ""),
                     "ozet": entry.get("summary", ""),
                     "link": entry.get("link", ""),
-                    "gorsel_url": gorsel_url_bul(entry), # GÖRSEL BURADA AYIKLANIYOR
+                    "gorsel_url": gorsel_url_bul(entry),
                     "kaynak": parsed.feed.get("title", "Haber Kaynağı")
                 })
         except Exception as e:
@@ -298,16 +306,12 @@ def haberleri_islemden_gecir():
     yeni_eklenenler = []
 
     for item in ai_data:
-        item_title = item.get("baslik", "").lower()
-        best_match = ham_haberler[0]
-        max_score = -1
-
-        for raw in ham_haberler:
-            raw_title = raw["orijinal_baslik"].lower()
-            score = sum(1 for word in item_title.split() if len(word) > 3 and word in raw_title)
-            if score > max_score:
-                max_score = score
-                best_match = raw
+        # BİREBİR EŞLEŞTİRME DÜZELTMESİ
+        orig_id = item.get("orijinal_id")
+        if orig_id is not None and isinstance(orig_id, int) and 0 <= orig_id < len(ham_haberler):
+            best_match = ham_haberler[orig_id]
+        else:
+            best_match = ham_haberler[0]
 
         temiz_kategori = kategori_duzelt(item.get("kategori"))
 
@@ -317,7 +321,7 @@ def haberleri_islemden_gecir():
             "title": item.get("baslik"),
             "summary": item.get("kisa_aciklama"),
             "fullText": item.get("detay"),
-            "imageUrl": best_match.get("gorsel_url", ""), # SİTE İÇİN RESİM LINKI EKLENDI
+            "imageUrl": best_match.get("gorsel_url", ""),
             "source": best_match["kaynak"],
             "sourceUrl": best_match["link"],
             "date": simdi_str

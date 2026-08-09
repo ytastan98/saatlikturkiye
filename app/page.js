@@ -20,20 +20,6 @@ const normalizeCat = (cat) => {
   return map[c] || c;
 };
 
-// Türkiye Şehir Koordinatları Liste (Manuel Değişim İçin)
-const SEHIRLER = [
-  { name: 'Antalya', lat: 36.8848, lon: 30.7056 },
-  { name: 'Ankara', lat: 39.9334, lon: 32.8597 },
-  { name: 'İstanbul', lat: 41.0082, lon: 28.9784 },
-  { name: 'İzmir', lat: 38.4237, lon: 27.1428 },
-  { name: 'Bursa', lat: 40.1885, lon: 29.0610 },
-  { name: 'Adana', lat: 37.0000, lon: 35.3213 },
-  { name: 'Gaziantep', lat: 37.0662, lon: 37.3833 },
-  { name: 'Konya', lat: 37.8714, lon: 32.4846 },
-  { name: 'Kayseri', lat: 38.7205, lon: 35.4826 },
-  { name: 'Trabzon', lat: 41.0027, lon: 39.7168 }
-];
-
 export default function Home() {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
@@ -41,9 +27,9 @@ export default function Home() {
   const [selectedCat, setSelectedCat] = useState('TÜMÜ');
   const [weather, setWeather] = useState(null);
   const [prayerTimes, setPrayerTimes] = useState(null);
-  const [city, setCity] = useState('Antalya');
+  const [city, setCity] = useState('Konum alınıyor...');
 
-  // Widget Verilerini Çeken Fonksiyon
+  // Hava durumu ve Ezan vakti verilerini yükleyen fonksiyon
   const loadWidgets = (lat, lon, cityName) => {
     setCity(cityName);
     localStorage.setItem('st_user_city', cityName);
@@ -77,29 +63,43 @@ export default function Home() {
       })
       .catch(() => setNews([]));
 
-    // 2. Konum Yönetimi (GPS + Cache)
-    const initLocation = () => {
+    // 2. OTOMATİK KONUM TESPİTİ (Seçim menüsü olmadan)
+    const initLocation = async () => {
+      // Önce hafızadaki konuma bak
       const savedCity = localStorage.getItem('st_user_city');
       const savedLat = localStorage.getItem('st_user_lat');
       const savedLon = localStorage.getItem('st_user_lon');
 
-      // Önceden seçilmiş veya kaydedilmiş şehir varsa onu yükle
       if (savedCity && savedLat && savedLon) {
         loadWidgets(savedLat, savedLon, savedCity);
         return;
       }
 
-      // Kayıt yoksa Tarayıcı GPS İznini İste (En Doğru Sonuç)
+      // Cihaz GPS Konumu
       if (typeof window !== 'undefined' && 'geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(
-          (pos) => {
+          async (pos) => {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
-            // GPS geldiyse bulunulan koordinatları bas
-            loadWidgets(lat, lon, 'Konumunuz');
+            try {
+              const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=tr`);
+              const geo = await res.json();
+              const detectedCity = geo.city || geo.principalSubdivision || 'Antalya';
+              loadWidgets(lat, lon, detectedCity);
+            } catch (e) {
+              loadWidgets(lat, lon, 'Antalya');
+            }
           },
-          () => {
-            // İzin verilmezse varsayılan Antalya yükle
+          async () => {
+            // İzin verilmezse IP üzerinden şehri tespit et
+            try {
+              const res = await fetch('https://ip-api.com/json/?lang=tr&fields=status,city,lat,lon');
+              const data = await res.json();
+              if (data && data.status === 'success' && data.city) {
+                loadWidgets(data.lat, data.lon, data.city);
+                return;
+              }
+            } catch (e) {}
             loadWidgets(36.8848, 30.7056, 'Antalya');
           },
           { timeout: 5000 }
@@ -111,15 +111,6 @@ export default function Home() {
 
     initLocation();
   }, []);
-
-  // Şehir Elle Değiştirildiğinde
-  const handleCityChange = (e) => {
-    const selectedName = e.target.value;
-    const found = SEHIRLER.find(s => s.name === selectedName);
-    if (found) {
-      loadWidgets(found.lat, found.lon, found.name);
-    }
-  };
 
   useEffect(() => {
     let result = news;
@@ -176,33 +167,11 @@ export default function Home() {
         {/* BİLGİ WİDGETLARI */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px', marginBottom: '20px' }}>
           
-          {/* Hava Durumu & Şehir Seçici */}
+          {/* Hava Durumu (Sadece Temiz Şehir İsmi) */}
           <div style={{ backgroundColor: '#111113', border: '1px solid #27272a', borderRadius: '12px', padding: '14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
               <span style={{ fontSize: '11px', color: '#a1a1aa' }}>📍 Canlı Hava Durumu</span>
-              
-              {/* Elle Şehir Seçme Dropdown'ı */}
-              <div style={{ marginTop: '4px' }}>
-                <select 
-                  value={city === 'Konumunuz' ? 'Antalya' : city} 
-                  onChange={handleCityChange}
-                  style={{
-                    backgroundColor: '#18181b',
-                    color: '#fff',
-                    border: '1px solid #3f3f46',
-                    borderRadius: '6px',
-                    padding: '2px 6px',
-                    fontSize: '14px',
-                    fontWeight: 'bold',
-                    cursor: 'pointer',
-                    outline: 'none'
-                  }}
-                >
-                  {SEHIRLER.map(s => (
-                    <option key={s.name} value={s.name}>{s.name}</option>
-                  ))}
-                </select>
-              </div>
+              <h4 style={{ margin: '4px 0 0 0', fontSize: '16px', color: '#ffffff', fontWeight: 'bold' }}>{city}</h4>
             </div>
 
             {weather ? (
@@ -255,10 +224,10 @@ export default function Home() {
         {/* HABER LİSTESİ */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
           {filteredNews.length > 0 ? (
-            filteredNews.map((item) => {
+            filteredNews.map((item, index) => {
               const imageSrc = item.imageUrl || item.image;
               return (
-                <article key={item.id} style={{ backgroundColor: '#111113', border: '1px solid #27272a', borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <article key={item.id || index} style={{ backgroundColor: '#111113', border: '1px solid #27272a', borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   {imageSrc && (
                     <img src={imageSrc} alt={item.title} style={{ width: '100%', height: '170px', objectFit: 'cover' }} />
                   )}
