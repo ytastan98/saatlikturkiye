@@ -38,7 +38,7 @@ RSS_LISTE = [
 ]
 
 HAFIZA_DOSYASI = "paylasilan_haberler.json"
-WEB_JSON_DOSYASI = "news.json"
+WEB_JSON_DOSYASI = "public/news.json"
 TG_OUTPUT_IMAGE = "kusursuz_gundem_telegram.png"
 IG_OUTPUT_IMAGE = "kusursuz_gundem_instagram.png"
 
