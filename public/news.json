@@ -1,41 +1,42 @@
 [
   {
-    "id": "1786288660_1",
+    "id": "1786289087_1",
     "category": "SUÇ",
-    "title": "Tırın Gizli Bölmesinde Suç Örgütü Üyesi Yakalandı",
-    "summary": "İstanbul'da yapılan operasyon kapsamında bir tırın gizli bölmesinde suç örgütü üyesi yakalandı. Yakalanan şahıs hakkında gerekli işlemler yapıldıktan sonra adli mercilere sevk edildi.",
-    "fullText": "İstanbul Emniyet Müdürlüğü tarafından yapılan operasyon sonucunda, bir tırın gizli bölmesinde suç örgütü üyesi yakalandı. Operasyon, güvenlik güçlerinin uzun süredir devam eden çalışmalarının ardından gerçekleşti.",
-    "source": "Ensonhaber",
-    "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
-    "date": "09.08.2026 - 18:17"
-  },
-  {
-    "id": "1786288660_2",
-    "category": "SUÇ",
-    "title": "Uyuşturucu Operasyonunda 117 Kök Hint Keneviri Ele Geçirildi",
-    "summary": "İstanbul'da yapılan uyuşturucu operasyonunda 117 kök Hint keneviri ele geçirildi. Operasyon kapsamında several şüpheli hakkında soruşturma başlatıldı.",
-    "fullText": "İstanbul'da gerçekleştirilen uyuşturucu operasyonunda, güvenlik güçleri tarafından 117 kök Hint keneviri ele geçirildi. Operasyon, uyuşturucu madde ticaretinin önlenmesi amacıyla yürütülen çalışmaların bir parçası olarak gerçekleşti.",
+    "title": "İstanbul'da Uyuşturucu Operasyonu",
+    "summary": "İstanbul'da yapılan uyuşturucu operasyonunda 117 kök Hint keneviri ele geçirildi. Operasyonun ardından çok sayıda şüpheli gözaltına alındı.",
+    "fullText": "İstanbul Emniyet Müdürlüğü'nün düzenlediği operasyon kapsamında, uyuşturucu madde ticareti yapan bir grup şüpheli yakalandı.",
     "source": "Ensonhaber",
     "sourceUrl": "https://www.ensonhaber.com/istanbuldaki-uyusturucu-operasyonunda-117-kok-hint-keneviri-ele-gecirildi-h1556175",
-    "date": "09.08.2026 - 18:17"
+    "date": "09.08.2026 - 18:24"
   },
   {
-    "id": "1786288660_3",
+    "id": "1786289087_2",
     "category": "TRAFİK",
-    "title": "Antalya'da Tünel Kazası: Yaşlı Çift Hayatını Kaybetti",
-    "summary": "Antalya'da bir otomobil tünelin duvarına çarparak büyük bir kazaya neden oldu. Kazada yaşlı bir çift hayatını kaybetti.",
-    "fullText": "Antalya'da meydana gelen tünel kazasında, bir otomobil tünelin duvarına çarparak büyük bir kazaya neden oldu. Kazada hayatını kaybeden yaşlı çift için soruşturma başlatıldı.",
+    "title": "Antalya'da Trafik Kazası",
+    "summary": "Antalya'da bir otomobil tünelin duvarına çarparak yangın çıktı. Kaza sonucunda yaşlı bir çift yaşamını yitirdi.",
+    "fullText": "Kazanın nedeninin araştırılması için soruşturma başlatıldı. Tünelin güvenliği hakkında soru işaretleri oluştu.",
     "source": "Ensonhaber",
     "sourceUrl": "https://www.ensonhaber.com/antalyayi-otomobil-tunelin-duvarina-carpti-yasli-cift-yasamini-yitirdi-h1556203",
-    "date": "09.08.2026 - 18:17"
+    "date": "09.08.2026 - 18:24"
   },
   {
-    "id": "1786288660_4",
-    "category": "DÜNYA",
-    "title": "Suriye, Topraklarındaki Rus Üsleri İçin Anlaşma Yapıldığını Açıkladı",
-    "summary": "Suriye, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardığını açıkladı. Anlaşma, iki ülke arasındaki askeri işbirliğini güçlendirecek.",
-    "fullText": "Suriye hükümeti, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardığını resmen açıkladı. Bu anlaşma, Suriye ve Rusya arasındaki askeri işbirliğini daha da güçlendirecek ve bölgedeki stratejik ortaklığı pekiştirecek.",
+    "id": "1786289087_3",
+    "category": "İÇ HABERLER",
+    "title": "Orman Yangını Soruşturması",
+    "summary": "Bakan Gürlek, orman yangını soruşturmalarında 9 şüphelinin tutuklandığını açıkladı. Tutuklanan şüphelilerin yargılanması için hazırlıklar sürüyor.",
+    "fullText": "Orman yangınlarının nedenlerinin araştırılması için geniş kapsamlı bir soruşturma yürütülüyor. Soruşturma kapsamında çok sayıda kişi dinlendi.",
     "source": "TRT Haber Son Dakika Haberler",
-    "sourceUrl": "https://www.trthaber.com/haber/dunya/suriye-topraklarindaki-rus-usleri-icin-moskova-ile-anlasmaya-vardigini-acikladi-953483.html",
-    "date": "09.08.2026 - 18:17"
+    "sourceUrl": "https://www.trthaber.com/haber/gundem/bakan-gurlek-orman-yangini-sorusturmalarinda-9-supheli-tutuklandi-953486.html",
+    "date": "09.08.2026 - 18:24"
+  },
+  {
+    "id": "1786289087_4",
+    "category": "DÜNYA",
+    "title": "Avusturya Şansölyesi Türkiye'yi Ziyaret Edecek",
+    "summary": "Avusturya Şansölyesi Stocker, yarın Türkiye'yi resmi bir ziyaret için gelecek. Ziyaret sırasında iki ülke arasındaki ilişkilerin güçlendirilmesi hedefleniyor.",
+    "fullText": "Avusturya Şansölyesi'nin ziyaretinin ekonomi ve siyaset alanlarında önemli gelişmelere yol açması bekleniyor. İki ülke arasındaki iş birliği anlaşmalarının imzalanması öngörülüyor.",
+    "source": "Anadolu Ajansı Güncel Haberler",
+    "sourceUrl": "https://www.aa.com.tr/tr/gundem/avusturya-sansolyesi-stocker-yarin-turkiyeyi-ziyaret-edecek/4022539",
+    "date": "09.08.2026 - 18:24"
   }
+]
