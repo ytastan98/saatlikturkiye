@@ -1,5 +1,49 @@
 [
   {
+    "id": "1786305604_1",
+    "category": "SUÇ",
+    "title": "İstanbul'da Kız Meselesi Kavgası",
+    "summary": "İstanbul'da kız meselesi nedeniyle çıkan kavgada 17 yaşındaki bir gence baltalı saldırı düzenlendi. Saldırıda genç ağır şekilde yaralandı.",
+    "fullText": "Olay, İstanbul'un bir ilçesinde meydana geldi. 17 yaşındaki genç, kız meselesi nedeniyle bir grup kişiyle tartışmaya girdi. Tartışma kısa sürede kavgaya dönüştü ve genç baltayla vuruldu.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a78d327b6017158.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbulda-kiz-meselesi-kavgasi-17-yasindaki-gence-baltali-saldiri-h1556219",
+    "date": "09.08.2026 - 23:00"
+  },
+  {
+    "id": "1786305604_2",
+    "category": "SAĞLIK",
+    "title": "Deniz Ambulansları 44 Bin Hastayı Taşıdı",
+    "summary": "Bakan Memişoğlu, deniz ambulanslarının 44 bin 476 hastayı naklettiğini açıkladı. Deniz ambulansları, sağlık hizmetlerine erişimi kolaylaştırmaya devam ediyor. Bakan Memişoğlu, deniz ambulanslarının önemine dikkat çekti.",
+    "fullText": "Deniz ambulansları, özellikle kıyı bölgelerde yaşayan人们in sağlık hizmetlerine erişimi kolaylaştırmak için önemli bir rol oynuyor. Bakan Memişoğlu, deniz ambulanslarının sayısının artırılacağını ve hizmetlerin genişletileceğini belirtti.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/deniz-ambulansi-trt-2480763.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/savunma/bakan-memisoglu-6-deniz-ambulansimiz-44-bin-476-hastamizin-naklini-gerceklestirdi-953490.html",
+    "date": "09.08.2026 - 23:00"
+  },
+  {
+    "id": "1786305604_3",
+    "category": "ÇEVRE",
+    "title": "Manisa'da Orman Yangını",
+    "summary": "Manisa'da bir orman yangını çıktı. Yangına müdahale ediliyor. Yangın, bölgede geniş alanları etkiliyor.",
+    "fullText": "Orman yangını, Manisa'nın bir ilçesinde meydana geldi. Yangın, rüzgarın etkisiyle hızlı bir şekilde yayılıyor. İtfaiye ekipleri ve orman yangınıyla mücadele ekipleri, yangına müdahale ediyor.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/manisa-yangin-aa-2480764.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/turkiye/manisada-cikan-orman-yanginina-mudahale-ediliyor-953488.html",
+    "date": "09.08.2026 - 23:00"
+  },
+  {
+    "id": "1786305604_4",
+    "category": "DÜNYA",
+    "title": "Avusturya Şansölyesi Türkiye'yi Ziyaret Edecek",
+    "summary": "Avusturya Şansölyesi Stocker, yarın Türkiye'yi ziyaret edecek. Ziyaret, iki ülke arasındaki ilişkilerin güçlendirilmesi açısından önemli görülüyor. Şansölye Stocker, Türkiye'de çeşitli temaslar gerçekleştirecek.",
+    "fullText": "Avusturya Şansölyesi Stocker'in Türkiye ziyaretinin, iki ülke arasındaki ekonomik ve siyasi ilişkilerin güçlendirilmesine katkı sağlaması bekleniyor. Şansölye Stocker, Türkiye'de Cumhurbaşkanı ve diğer yetkililerle görüşmeler gerçekleştirecek.",
+    "imageUrl": "https://web-cdnprod.aa.com.tr/uploads/Contents/2026/08/09/thumbs_b_c_d5ade91afbac1bd45a9e9af27e936e0e.jpg",
+    "source": "Anadolu Ajansı Güncel Haberler",
+    "sourceUrl": "https://www.aa.com.tr/tr/gundem/avusturya-sansolyesi-stocker-yarin-turkiyeyi-ziyaret-edecek/4022539",
+    "date": "09.08.2026 - 23:00"
+  },
+  {
     "id": "1786305386_1",
     "category": "SUÇ",
     "title": "Mersin'de Çakmak Gazı Soluduğu İddia Edilen Çocuk Öldü",
