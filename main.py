@@ -11,11 +11,10 @@ from PIL import Image, ImageDraw, ImageFont
 from instagrapi import Client
 from dotenv import load_dotenv
 
-# .env dosyasındaki değişkenleri yüklüyoruz
 load_dotenv()
 
 # ==========================================
-# AYARLAR & API BİLGİLERİ (.env 'den Alınıyor)
+# AYARLAR & API BİLGİLERİ (.env)
 # ==========================================
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
@@ -86,7 +85,7 @@ def haber_daha_once_paylasildi_mi(baslik, hafiza):
     return False
 
 # ==========================================
-# 1. HABER ÇEKME VE AI ÖZETLEME
+# 1. HABER ÇEKME VE AI ÖZETLEME (4 HABER)
 # ==========================================
 def haberleri_cek_ve_ozetle():
     print("🌐 1. RSS kaynaklarından haberler taranıyor...")
@@ -130,11 +129,11 @@ def haberleri_cek_ve_ozetle():
 
     print(f"✅ {eklenen_sayi} yeni haber toplandı. AI özetliyor...")
 
-    prompt = f"""Aşağıdaki haber havuzunu incele ve en önemli 5 haberi seç.
+    prompt = f"""Aşağıdaki haber havuzunu incele ve en önemli 4 haberi seç.
 
     ÇOK ÖNEMLİ VE KESİN KURALLAR:
     1. 'baslik' alanı olayı net anlatan tam bir haber başlığı olsun.
-    2. 'kisa_aciklama' alanı KESİNLİKLE BAŞLIĞIN BİREBİR TEKRARI OLMASIN! Olayın detayını, nedenini veya arka planını anlatan TAM 2 veya 3 CÜMLE (yaklaşık 130-170 karakter) olsun. Her cümlenin sonuna nokta (.) koy!
+    2. 'kisa_aciklama' alanı KESİNLİKLE BAŞLIĞIN BİREBİR TEKRARI OLMASIN! Olayın detayını, nedenini veya arka planını anlatan TAM 2 veya 3 CÜMLE (yaklaşık 120-150 karakter) olsun. Her cümlenin sonuna nokta (.) koy!
     3. 'detay' alanı Instagram açıklaması için 3-4 cümlelik detaylı metin olsun. Cümle sonlarına mutlaka nokta koy.
     4. KESİNLİKLE çift tırnak (") KULLANMA! Tırnak gerekirse tek tırnak (') kullan.
 
@@ -145,7 +144,7 @@ def haberleri_cek_ve_ozetle():
           "id": 1,
           "baslik": "Netanyahu Ateşkes Planını Reddetti",
           "kisa_aciklama": "İsrail Başbakanı Netanyahu, sunulan son teklifin şartları karşılamadığını belirterek anlaşmayı imzalamadı. Karar sonrası bölgedeki gerilim yeniden tırmanışa geçti. Uluslararası kamuoyundan tepkiler yükseliyor.",
-          "detay": "İsrail Başbakanı Binyamin Netanyahu, Hamas ile yürütülen müzakerelerde sunulan yeni ateşkes taslağını kabul etmediğini duyurdu. Güvenlik kabinesiyle yapılan toplantının ardından açıklama yapan yetkililer, askeri operasyonların devam edeceğini bildirdi. Kararın ardından uluslararası toplumdan barış çağrıları yineledi.",
+          "detay": "İsrail Başbakanı Binyamin Netanyahu, Hamas ile yürütülen müzakerelerde sunulan yeni ateşkes taslağını kabul etmediğini duyurdu. Güvenlik kabinesiyle yapılan toplantının ardından açıklama yapan yetkililer, askeri operasyonların devam edeceğini bildirdi.",
           "kategori": "ULUSLARARASI"
         }}
       ]
@@ -159,7 +158,7 @@ def haberleri_cek_ve_ozetle():
     payload = {
         "model": "llama-3.3-70b-versatile",
         "messages": [
-            {"role": "system", "content": "You are a senior news editor. Never repeat the news title inside the short summary. Always write 2-3 distinct descriptive sentences for the summary with proper periods."},
+            {"role": "system", "content": "You are a senior news editor. Select exactly 4 key news items. Never repeat the news title inside the short summary."},
             {"role": "user", "content": prompt}
         ],
         "response_format": {"type": "json_object"},
@@ -176,7 +175,7 @@ def haberleri_cek_ve_ozetle():
             islenen_basliklar = []
             simdi_str = datetime.now().strftime("%d %b %Y - %H:%M")
 
-            for item in ai_data:
+            for item in ai_data[:4]:
                 item_id = item.get("id", 1)
                 matching_raw = ham_haberler[item_id - 1] if item_id <= len(ham_haberler) else ham_haberler[0]
                 
@@ -193,7 +192,6 @@ def haberleri_cek_ve_ozetle():
                 })
                 islenen_basliklar.append(item.get("baslik"))
 
-            # Klasör yoksa (public) otomatik oluşturur
             os.makedirs(os.path.dirname(WEB_JSON_DOSYASI), exist_ok=True)
 
             with open(WEB_JSON_DOSYASI, "w", encoding="utf-8") as wf:
@@ -201,70 +199,153 @@ def haberleri_cek_ve_ozetle():
             
             hafizaya_kaydet(islenen_basliklar)
             print("🌐 'public/news.json' başarıyla üretildi.")
-            return ai_data, web_news_list
+            return ai_data[:4], web_news_list
     except Exception as e:
         print(f"❌ AI İşleme Hatası: {e}")
         return None, None
 
 # ==========================================
-# 2. GÖRSEL ÇİZİM İŞLEMLERİ
+# 2. BÜYÜTÜLMÜŞ FONT & 4 KARTLI GÖRSEL ÇİZİMİ
+# ==========================================
+# ==========================================
+# 1. AI PROMPT GÜNCELLEMESİ (Haber Özeti Sınırı)
+# ==========================================
+# prompt değişkeni içindeki kisa_aciklama kuralını şu şekilde tutun:
+# "kisa_aciklama": "Olayın detayını anlatan TAM 130-160 KARAKTER (yaklaşık 2 net cümle) yaz. Cümle sonuna nokta koy!"
+
+
+# ==========================================
+# 2. GÖRSEL ÇİZİM İŞLEMLERİ (Yeni Fontlar Uyumlu)
 # ==========================================
 def gorsel_olustur(ai_maddeler):
-    print("🎨 2. Görseller çiziliyor...")
+    print("🎨 Görseller yeni font boyutlarıyla çiziliyor...")
     
     def ciz(genislik, yukseklik, dosya_adi):
         img = Image.new("RGB", (genislik, yukseklik), color="#000000")
         draw = ImageDraw.Draw(img)
         
         try:
-            font_logo = ImageFont.truetype("arialbd.ttf", 34)
-            font_kategori = ImageFont.truetype("arialbd.ttf", 15)
-            font_baslik = ImageFont.truetype("arialbd.ttf", 18)
-            font_metin = ImageFont.truetype("arial.ttf", 13)
-            font_footer = ImageFont.truetype("arialbd.ttf", 16)
+            font_logo = ImageFont.truetype("arialbd.ttf", 36)
+            font_kategori = ImageFont.truetype("arialbd.ttf", 25)
+            font_baslik = ImageFont.truetype("arialbd.ttf", 28)
+            font_metin = ImageFont.truetype("arial.ttf", 25)
+            font_footer = ImageFont.truetype("arialbd.ttf", 20)
         except Exception:
             font_logo = font_kategori = font_baslik = font_metin = font_footer = ImageFont.load_default()
 
-        # Header
-        draw.rectangle([(0, 0), (genislik, 90)], fill="#0d0d0d")
-        draw.line([(0, 90), (genislik, 90)], fill="#e11d48", width=3)
+        # Header (Üst Bar)
+        draw.rectangle([(0, 0), (genislik, 95)], fill="#0d0d0d")
+        draw.line([(0, 95), (genislik, 95)], fill="#e11d48", width=3)
         
         draw.text((40, 26), "SAATLİK", fill="#ffffff", font=font_logo)
-        draw.text((215, 26), "TÜRKİYE", fill="#e11d48", font=font_logo)
+        draw.text((225, 26), "TÜRKİYE", fill="#e11d48", font=font_logo)
         
         tarih_str = datetime.now().strftime("%d.%m.%Y  |  %H:%M")
-        draw.text((genislik - 240, 32), tarih_str, fill="#f4f4f5", font=font_footer)
+        draw.text((genislik - 260, 34), tarih_str, fill="#f4f4f5", font=font_footer)
 
-        y_offset = 105
-        for i, item in enumerate(ai_maddeler[:5], 1):
+        # 4 Kart Düzeni (Yüksek Fontlara Göre Genişletilmiş)
+        y_offset = 110
+        kart_yukseklik = 215
+
+        for i, item in enumerate(ai_maddeler[:4], 1):
             # Kart Arka Planı
-            draw.rectangle([(30, y_offset), (genislik - 30, y_offset + 172)], fill="#111113", outline="#27272a", width=1)
-            draw.rectangle([(30, y_offset), (36, y_offset + 172)], fill="#2563eb")
+            draw.rectangle([(30, y_offset), (genislik - 30, y_offset + kart_yukseklik)], fill="#111113", outline="#27272a", width=1)
+            draw.rectangle([(30, y_offset), (38, y_offset + kart_yukseklik)], fill="#2563eb")
             
-            # Kategori Etiketi
+            # Kategori Etiketi (25px)
             kat_text = f"#{i}  {item.get('kategori', 'GÜNDEM').upper()}"
             draw.text((55, y_offset + 10), kat_text, fill="#60a5fa", font=font_kategori)
             
-            # Başlık
-            baslik_satirlar = textwrap.wrap(item.get("baslik", ""), width=65)
-            line_y = y_offset + 30
+            # Başlık (28px - Kartın sağına kadar uzanır)
+            baslik_satirlar = textwrap.wrap(item.get("baslik", ""), width=45)
+            line_y = y_offset + 42
             for line in baslik_satirlar[:2]:
                 draw.text((55, line_y), line, fill="#ffffff", font=font_baslik)
-                line_y += 22
+                line_y += 34
 
             # Nokta Kontrolü
             aciklama = item.get("kisa_aciklama", "").strip()
             if aciklama and aciklama[-1] not in [".", "!", "?"]:
                 aciklama += "."
 
-            # 2-3 Cümlelik Açıklama Metni (Taşmaması için 3 satır sınırı)
-            ozet_satirlar = textwrap.wrap(aciklama, width=82)
-            line_y += 4
+            # Açıklama Metni (25px - width=65 yapılarak sağ boşluk kapatıldı)
+            ozet_satirlar = textwrap.wrap(aciklama, width=65)
+            line_y += 6
             for ozet_line in ozet_satirlar[:3]:
                 draw.text((55, line_y), ozet_line, fill="#d4d4d8", font=font_metin)
-                line_y += 17
+                line_y += 30
 
-            y_offset += 183
+            y_offset += kart_yukseklik + 12
+
+        # Footer (Alt Bar)
+        draw.rectangle([(0, yukseklik - 55), (genislik, yukseklik)], fill="#0d0d0d")
+        draw.line([(0, yukseklik - 55), (genislik, yukseklik - 55)], fill="#27272a", width=1)
+        
+        draw.text((40, yukseklik - 38), f"🌐 {WEBSITE_URL.upper()}", fill="#ffffff", font=font_footer)
+        draw.text((genislik - 340, yukseklik - 38), f"📢 Telegram: {KANAL_ADI}", fill="#38bdf8", font=font_footer)
+
+        img.save(dosya_adi)
+
+    ciz(1080, 1080, TG_OUTPUT_IMAGE)
+    ciz(1080, 1080, IG_OUTPUT_IMAGE)
+    print("🎨 2. Görseller çiziliyor (Büyük fontlu 4 kart)...")
+    
+    def ciz(genislik, yukseklik, dosya_adi):
+        img = Image.new("RGB", (genislik, yukseklik), color="#000000")
+        draw = ImageDraw.Draw(img)
+        
+        try:
+            font_logo = ImageFont.truetype("arialbd.ttf", 36)
+            font_kategori = ImageFont.truetype("arialbd.ttf", 25) # Büyütüldü
+            font_baslik = ImageFont.truetype("arialbd.ttf", 28)   # Büyütüldü
+            font_metin = ImageFont.truetype("arial.ttf", 25)      # Büyütüldü
+            font_footer = ImageFont.truetype("arialbd.ttf", 20)
+        except Exception:
+            font_logo = font_kategori = font_baslik = font_metin = font_footer = ImageFont.load_default()
+
+        # Header
+        draw.rectangle([(0, 0), (genislik, 95)], fill="#0d0d0d")
+        draw.line([(0, 95), (genislik, 95)], fill="#e11d48", width=3)
+        
+        draw.text((40, 28), "SAATLİK", fill="#ffffff", font=font_logo)
+        draw.text((225, 28), "TÜRKİYE", fill="#e11d48", font=font_logo)
+        
+        tarih_str = datetime.now().strftime("%d.%m.%Y  |  %H:%M")
+        draw.text((genislik - 240, 36), tarih_str, fill="#f4f4f5", font=font_footer)
+
+        # 4 Kart için Y Düzeneği (Daha geniş kartlar)
+        y_offset = 115
+        kart_yukseklik = 210  # Kartlar genişletildi
+
+        for i, item in enumerate(ai_maddeler[:4], 1):
+            # Kart Arka Planı
+            draw.rectangle([(30, y_offset), (genislik - 30, y_offset + kart_yukseklik)], fill="#111113", outline="#27272a", width=1)
+            draw.rectangle([(30, y_offset), (37, y_offset + kart_yukseklik)], fill="#2563eb")
+            
+            # Kategori Etiketi
+            kat_text = f"#{i}  {item.get('kategori', 'GÜNDEM').upper()}"
+            draw.text((55, y_offset + 12), kat_text, fill="#60a5fa", font=font_kategori)
+            
+            # Başlık (Büyük Font)
+            baslik_satirlar = textwrap.wrap(item.get("baslik", ""), width=56)
+            line_y = y_offset + 38
+            for line in baslik_satirlar[:2]:
+                draw.text((55, line_y), line, fill="#ffffff", font=font_baslik)
+                line_y += 28
+
+            # Nokta Kontrolü
+            aciklama = item.get("kisa_aciklama", "").strip()
+            if aciklama and aciklama[-1] not in [".", "!", "?"]:
+                aciklama += "."
+
+            # Açıklama Metni (Büyük Font)
+            ozet_satirlar = textwrap.wrap(aciklama, width=70)
+            line_y += 6
+            for ozet_line in ozet_satirlar[:3]:
+                draw.text((55, line_y), ozet_line, fill="#d4d4d8", font=font_metin)
+                line_y += 23
+
+            y_offset += kart_yukseklik + 15  # Kart arası boşluk
 
         # Footer
         draw.rectangle([(0, yukseklik - 55), (genislik, yukseklik)], fill="#0d0d0d")
@@ -277,7 +358,7 @@ def gorsel_olustur(ai_maddeler):
 
     ciz(1080, 1080, TG_OUTPUT_IMAGE)
     ciz(1080, 1080, IG_OUTPUT_IMAGE)
-    print("✅ Görseller başarıyla oluşturuldu.")
+    print("✅ Görseller büyük fontlarla başarıyla oluşturuldu.")
 
 # ==========================================
 # 3. TELEGRAM PAYLAŞIMI
@@ -311,7 +392,7 @@ def instagram_paylas(ai_maddeler):
         return
 
     caption = "🔴 SAATLİK TÜRKİYE — GÜNÜN ÖNE ÇIKAN HABERLERİ\n\n"
-    for i, item in enumerate(ai_maddeler[:5], 1):
+    for i, item in enumerate(ai_maddeler[:4], 1):
         detay_metni = item.get('detay', '').strip()
         if detay_metni and detay_metni[-1] not in [".", "!", "?"]:
             detay_metni += "."
@@ -330,7 +411,7 @@ def instagram_paylas(ai_maddeler):
         print(f"⚠️ Instagram Paylaşım Hatası (Akış devam ediyor): {e}")
 
 # ==========================================
-# 5. VERCEL WEB SİTESİ GÜNCELLEME (OTOMATİK GIT PUSH)
+# 5. VERCEL WEB SİTESİ GÜNCELLEME
 # ==========================================
 def git_vercel_guncelle():
     print("🚀 5. Web sitesi Vercel üzerine aktarılıyor...")
