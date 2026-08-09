@@ -43,10 +43,10 @@ export default function Home() {
       })
       .catch(() => setNews([]));
 
-    // Weather & Prayer fetch helper
-    const loadWidgets = (lat, lon, cityName) => {
+    // Widget Verilerini Yükleyen Yardımcı Fonksiyon
+    const loadDataForCoords = (lat, lon, cityName) => {
       setCity(cityName);
-      
+
       // Hava Durumu
       fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
         .then(res => res.json())
@@ -60,70 +60,44 @@ export default function Home() {
         .catch(() => {});
     };
 
-    const saveAndLoad = (lat, lon, cityName) => {
-      localStorage.setItem('user_city', cityName);
-      localStorage.setItem('user_lat', lat);
-      localStorage.setItem('user_lon', lon);
-      loadWidgets(lat, lon, cityName);
-    };
+    // 2. EN SADE VE SIKINTISIZ KONUM BULMA
+    const getSimpleLocation = async () => {
+      // Önce hafızaya bak (Zaten şehir varsa dışarıya istek atıp konumu bozma)
+      const savedCity = localStorage.getItem('st_city');
+      const savedLat = localStorage.getItem('st_lat');
+      const savedLon = localStorage.getItem('st_lon');
 
-    // 2. AKILLI KONUM YÖNETİMİ
-    const initLocation = async () => {
-      // A) Daha önce kaydedilmiş konum var mı? (Sayfa yenilemelerinde zıplamayı engeller)
-      const cachedCity = localStorage.getItem('user_city');
-      const cachedLat = localStorage.getItem('user_lat');
-      const cachedLon = localStorage.getItem('user_lon');
-
-      if (cachedCity && cachedLat && cachedLon) {
-        loadWidgets(cachedLat, cachedLon, cachedCity);
+      if (savedCity && savedLat && savedLon) {
+        loadDataForCoords(savedLat, savedLon, savedCity);
         return;
       }
 
-      // B) Cihazın Gerçek Konumu (GPS / Wi-Fi - En Doğru Sonuç)
-      if (typeof window !== 'undefined' && 'geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          async (pos) => {
-            const lat = pos.coords.latitude;
-            const lon = pos.coords.longitude;
-            try {
-              // Koordinatı şehir ismine çevir (Reverse Geocoding)
-              const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=tr`);
-              const geo = await res.json();
-              const detectedCity = geo.city || geo.principalSubdivision || 'Antalya';
-              saveAndLoad(lat, lon, detectedCity);
-              return;
-            } catch (e) {
-              saveAndLoad(lat, lon, 'Antalya');
-              return;
-            }
-          },
-          () => {
-            // İzin verilmezse IP tabanlı aramaya geç
-            fetchIPLocation();
-          },
-          { timeout: 4000 }
-        );
-      } else {
-        fetchIPLocation();
-      }
-    };
-
-    // C) IP Tabanlı Yedek Konum Çekici
-    const fetchIPLocation = async () => {
       try {
-        const res = await fetch('https://ipapi.co/json/');
+        // Doğrudan il adını veren sade Türkçe IP servisi (İlçe/Köy detayıyla uğraşmaz)
+        const res = await fetch('https://ip-api.com/json/?lang=tr&fields=status,city,lat,lon');
         const data = await res.json();
-        if (data.city && data.latitude && data.longitude) {
-          saveAndLoad(data.latitude, data.longitude, data.city);
+
+        if (data && data.status === 'success' && data.city) {
+          const detectedCity = data.city;
+          const lat = data.lat;
+          const lon = data.lon;
+
+          localStorage.setItem('st_city', detectedCity);
+          localStorage.setItem('st_lat', lat);
+          localStorage.setItem('st_lon', lon);
+
+          loadDataForCoords(lat, lon, detectedCity);
           return;
         }
-      } catch (err) {}
+      } catch (e) {
+        console.log('IP alınamadı, varsayılan şehir yükleniyor.');
+      }
 
-      // Varsayılan Antalya Garantisi
-      saveAndLoad(36.8848, 30.7056, 'Antalya');
+      // Hata durumunda sağlam yedek (Ankara)
+      loadDataForCoords(39.9334, 32.8597, 'Ankara');
     };
 
-    initLocation();
+    getSimpleLocation();
   }, []);
 
   useEffect(() => {
