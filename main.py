@@ -41,6 +41,48 @@ def kategori_duzelt(cat):
 
 
 def gorsel_url_bul(entry):
+    """RSS entry içerisinden veya haber sayfasından (og:image) haberin görselini çeker."""
+    # 1. media_content kontrolü
+    if 'media_content' in entry and len(entry.media_content) > 0:
+        url = entry.media_content[0].get('url')
+        if url: return url
+
+    # 2. enclosures (ekler) kontrolü
+    if 'enclosures' in entry and len(entry.enclosures) > 0:
+        for enc in entry.enclosures:
+            if enc.get('type', '').startswith('image/') or enc.get('href', '').endswith(('.jpg', '.jpeg', '.png', '.webp')):
+                return enc.get('href')
+
+    # 3. media_thumbnail kontrolü
+    if 'media_thumbnail' in entry and len(entry.media_thumbnail) > 0:
+        url = entry.media_thumbnail[0].get('url')
+        if url: return url
+
+    # 4. Summary veya Content içindeki HTML <img> etiketi
+    html_content = entry.get('summary', '') + entry.get('description', '')
+    img_match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', html_content, re.IGNORECASE)
+    if img_match:
+        return img_match.group(1)
+
+    # 5. 🔥 YEDEK PLAN (RSS'TE GÖRSEL YOKSA SAYFADAN OG:IMAGE ÇEK)
+    haber_linki = entry.get("link", "")
+    if haber_linki:
+        try:
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36"}
+            resp = requests.get(haber_linki, headers=headers, timeout=3)
+            if resp.status_code == 200:
+                # Open Graph (og:image) etiketini ara
+                og_match = re.search(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']', resp.text, re.IGNORECASE)
+                if not og_match:
+                    # Content özniteliği property'den önce geliyorsa
+                    og_match = re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']', resp.text, re.IGNORECASE)
+                
+                if og_match:
+                    return og_match.group(1)
+        except Exception:
+            pass  # Zaman aşımı veya bağlantı hatasında sistemi durdurma
+
+    return ""
     """RSS entry içerisinden haberin görsel URL'sini çeker."""
     if 'media_content' in entry and len(entry.media_content) > 0:
         url = entry.media_content[0].get('url')
