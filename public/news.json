@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "id": "1786289813_1",
+    "category": "SUÇ",
+    "title": "İstanbul'da Suç Örgütü Üyesi Yakalandı",
+    "summary": "İstanbul'da yapılan operasyonla bir suç örgütü üyesi tırın gizli bölmesinde yakalandı. Operasyon sırasında örgüt üyesinin üzerinde çeşitli suç aletleri ele geçirildi.",
+    "fullText": "İstanbul Emniyet Müdürlüğü tarafından yapılan operasyonla bir suç örgütü üyesi, tırın gizli bölmesinde yakalandı. Operasyon sırasında örgüt üyesinin üzerinde çeşitli suç aletleri ele geçirildi. Örgüt üyesi, adliyeye sevk edildi.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a789484098f6159.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/istanbulda-suc-orgutu-uyesi-tirin-gizli-bolmesinde-yakalandi-h1556205",
+    "date": "09.08.2026 - 18:36"
+  },
+  {
+    "id": "1786289813_2",
+    "category": "TRAFİK",
+    "title": "Antalya'da Tünel Kazası: Yaşlı Çift Hayatını Kaybetti",
+    "summary": "Antalya'da bir otomobil, tünelin duvarına çarptı ve yaşlı bir çift hayatını kaybetti. Kazanın nedeni henüz belirlenmedi.",
+    "fullText": "Antalya'da bir otomobil, tünelin duvarına çarptı ve yaşlı bir çift hayatını kaybetti. Kazanın nedeni henüz belirlenmedi. Kazaya ilişkin soruşturma devam ediyor.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/09/6a7891f02e769334.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/antalyayi-otomobil-tunelin-duvarina-carpti-yasli-cift-yasamini-yitirdi-h1556203",
+    "date": "09.08.2026 - 18:36"
+  },
+  {
+    "id": "1786289813_3",
+    "category": "DÜNYA",
+    "title": "Suriye, Topraklarındaki Rus Üsleri İçin Anlaşma Yapıldığını Açıkladı",
+    "summary": "Suriye, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardığını açıkladı. Anlaşma, iki ülke arasındaki ilişkileri güçlendirecek.",
+    "fullText": "Suriye, topraklarındaki Rus üsleri için Moskova ile anlaşmaya vardığını açıkladı. Anlaşma, iki ülke arasındaki ilişkileri güçlendirecek. Anlaşma detayları henüz açıklanmadı.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/suriye-re-2480760.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/dunya/suriye-topraklarindaki-rus-usleri-icin-moskova-ile-anlasmaya-vardigini-acikladi-953483.html",
+    "date": "09.08.2026 - 18:36"
+  },
+  {
+    "id": "1786289813_4",
+    "category": "TRAFİK",
+    "title": "Gökçeada'da Motosiklet Kazası: 2 Kişi Hayatını Kaybetti",
+    "summary": "Gökçeada'da bir motosiklet, park halindeki otomobile çarptı ve iki kişi hayatını kaybetti. Kazanın nedeni henüz belirlenmedi.",
+    "fullText": "Gökçeada'da bir motosiklet, park halindeki otomobile çarptı ve iki kişi hayatını kaybetti. Kazanın nedeni henüz belirlenmedi. Kazaya ilişkin soruşturma devam ediyor.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/canakkale-kaza-aa-2480762.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/turkiye/gokceadada-park-halindeki-otomobile-carpan-motosikletteki-2-kisi-oldu-953487.html",
+    "date": "09.08.2026 - 18:36"
+  }
+]
