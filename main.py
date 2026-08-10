@@ -5,13 +5,13 @@ import time
 import requests
 import feedparser
 import subprocess
-from datetime import datetime
+from io import BytesIO
+from datetime import datetime, timezone, timedelta
 from difflib import SequenceMatcher
 from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageFont
-from moviepy import ImageClip
-from moviepy import AudioFileClip
-# .env değişkenlerini yükle
+from moviepy import ImageClip, AudioFileClip
+
 load_dotenv(override=True)
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -20,608 +20,389 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 INSTAGRAM_SESSION_ID = os.getenv("INSTAGRAM_SESSION_ID")
 
 RSS_FEEDS = [
-    "https://www.ensonhaber.com/rss/ensonhaber.xml",
     "https://www.trthaber.com/sondakika_articles.rss",
-    "https://www.aa.com.tr/tr/rss/default?cat=gundem"
+    "https://www.ensonhaber.com/rss/ensonhaber.xml",
+    "https://www.aa.com.tr/tr/rss/default?cat=gundem",
+    "https://www.ntv.com.tr/son-dakika.rss",
+    "https://www.hurriyet.com.tr/rss/sondakika"
 ]
 
 NEWS_JSON_PATH = "public/news.json"
 
 HASHTAGS = """
-#sondakika #haber #gundem #turkiye #sondakikahaber #saatlikturkiye #reels #keşfet #haberler #gündem #canlıyayın #dünya #ekonomi #teknoloji
+#sondakika #haber #gundem #turkiye #sondakikahaber #saatlikturkiye #reels #keşfet #haberler #gündem
 """
-
 
 def kategori_duzelt(cat):
     if not cat:
-        return "GÜNDEM"
-    c = str(cat).strip().upper()
-    mapping = {
-        'SUC': 'SUÇ', 'TRAFIG': 'TRAFİK', 'TRAFIK': 'TRAFİK', 'TRAFFIK': 'TRAFİK',
-        'EKONOMI': 'EKONOMİ', 'IC HABERLER': 'İÇ HABERLER', 'IC': 'İÇ HABERLER',
-        'SAGLIK': 'SAĞLIK', 'EGITIM': 'EĞİTİM', 'POLITIKA': 'POLİTİKA',
-        'DUNYA': 'DÜNYA', 'TEKNOLOJI': 'TEKNOLOJİ'
-    }
-    return mapping.get(c, c)
-
+        return "SON DAKİKA"
+    return str(cat).strip().upper()
 
 def gorsel_url_bul(entry):
-    """RSS entry içerisinden veya haberin web sayfasından (og:image) görsel çeker."""
     if 'media_content' in entry and len(entry.media_content) > 0:
         url = entry.media_content[0].get('url')
         if url: return url
-
     if 'enclosures' in entry and len(entry.enclosures) > 0:
         for enc in entry.enclosures:
             if enc.get('type', '').startswith('image/') or enc.get('href', '').endswith(('.jpg', '.jpeg', '.png', '.webp')):
                 return enc.get('href')
-
     if 'media_thumbnail' in entry and len(entry.media_thumbnail) > 0:
         url = entry.media_thumbnail[0].get('url')
         if url: return url
 
     html_content = entry.get('summary', '') + entry.get('description', '')
     img_match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', html_content, re.IGNORECASE)
-    if img_match:
-        return img_match.group(1)
+    if img_match: return img_match.group(1)
 
     haber_linki = entry.get("link", "")
     if haber_linki:
         try:
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36"}
+            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0"}
             resp = requests.get(haber_linki, headers=headers, timeout=4)
             if resp.status_code == 200:
                 og_match = re.search(r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']', resp.text, re.IGNORECASE)
-                if not og_match:
-                    og_match = re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']', resp.text, re.IGNORECASE)
-                
-                if og_match:
-                    return og_match.group(1)
+                if og_match: return og_match.group(1)
         except Exception:
             pass
-
     return ""
-
-
-# ---------------------------------------------------------
-# 1. OTOMATİK GIT PUSH
-# ---------------------------------------------------------
 
 def git_push_degisiklikleri():
     try:
-        print("🔄 GitHub'a pushlanıyor (Vercel tetikleniyor)...")
         subprocess.run(["git", "add", NEWS_JSON_PATH], check=True)
-        commit_msg = f"auto: haberler güncellendi ({datetime.now().strftime('%H:%M')})"
-        subprocess.run(["git", "commit", "-m", commit_msg], check=True)
+        subprocess.run(["git", "commit", "-m", f"auto: haber güncellendi ({datetime.now().strftime('%H:%M')})"], check=True)
         subprocess.run(["git", "push"], check=True)
-        print("🚀 GitHub'a başarıyla pushlandı!")
-    except subprocess.CalledProcessError:
-        print("⚠️ Git push yapılamadı (Değişiklik yok veya Git hatası).")
+        print("🚀 GitHub'a başarıyla aktarıldı!")
     except Exception as e:
         print(f"❌ Git hatası: {e}")
-
-
-# ---------------------------------------------------------
-# 2. GÖRSEL VE VİDEO İŞLEME
-# ---------------------------------------------------------
 
 def metin_sardir(text, font, max_width, draw):
     words = text.split()
     lines = []
     current_line = []
-    
     for word in words:
         test_line = ' '.join(current_line + [word])
         bbox = draw.textbbox((0, 0), test_line, font=font)
         if bbox[2] - bbox[0] <= max_width:
             current_line.append(word)
         else:
-            if current_line:
-                lines.append(' '.join(current_line))
+            if current_line: lines.append(' '.join(current_line))
             current_line = [word]
-    if current_line:
-        lines.append(' '.join(current_line))
+    if current_line: lines.append(' '.join(current_line))
     return lines
 
-
-def bulten_gorseli_ciz(haberler, tarih_str):
+# ---------------------------------------------------------
+# PROFESYONEL VE HATASIZ GÖRSEL ÜRETİMİ (TAŞMA KONTROLLÜ)
+# ---------------------------------------------------------
+def tekli_haber_gorseli_ciz(haber):
     W, H = 1080, 1350
-    bg_color = (7, 8, 10)
-    img = Image.new("RGB", (W, H), color=bg_color)
-    draw = ImageDraw.Draw(img)
+    
+    bg_img = None
+    img_url = haber.get("imageUrl", "")
+    if img_url:
+        try:
+            resp = requests.get(img_url, timeout=5)
+            if resp.status_code == 200:
+                raw_img = Image.open(BytesIO(resp.content)).convert("RGB")
+                raw_w, raw_h = raw_img.size
+                target_aspect = W / H
+                current_aspect = raw_w / raw_h
+                
+                if current_aspect > target_aspect:
+                    new_h = H
+                    new_w = int(raw_w * (H / raw_h))
+                else:
+                    new_w = W
+                    new_h = int(raw_h * (W / raw_w))
+                
+                raw_img = raw_img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+                left = (new_w - W) / 2
+                top = (new_h - H) / 2
+                bg_img = raw_img.crop((left, top, left + W, top + H))
+        except Exception:
+            pass
+
+    if not bg_img:
+        bg_img = Image.new("RGB", (W, H), color=(15, 23, 42))
+
+    darken = Image.new("RGBA", (W, H), (0, 0, 0, 140))
+    bg_img = Image.alpha_composite(bg_img.convert("RGBA"), darken).convert("RGB")
+
+    draw = ImageDraw.Draw(bg_img)
 
     try:
-        font_header_bold = ImageFont.truetype("arialbd.ttf", 46)
-        font_title_bold = ImageFont.truetype("arialbd.ttf", 32)
-        font_cat_bold = ImageFont.truetype("arialbd.ttf", 28)
-        font_body = ImageFont.truetype("arial.ttf", 23)
-        font_small = ImageFont.truetype("arial.ttf", 22)
+        font_badge = ImageFont.truetype("arialbd.ttf", 30)
+        font_sub = ImageFont.truetype("arialbd.ttf", 26)
+        font_title = ImageFont.truetype("arialbd.ttf", 42)
+        font_desc = ImageFont.truetype("arial.ttf", 26)
+        font_footer = ImageFont.truetype("arialbd.ttf", 24)
     except IOError:
-        font_header_bold = font_title_bold = font_cat_bold = font_body = font_small = ImageFont.load_default()
+        font_badge = font_sub = font_title = font_desc = font_footer = ImageFont.load_default()
 
-    draw.text((50, 45), "SAATLİK ", font=font_header_bold, fill=(255, 255, 255))
-    bbox = draw.textbbox((50, 45), "SAATLİK ", font=font_header_bold)
-    draw.text((bbox[2], 45), "TÜRKİYE", font=font_header_bold, fill=(229, 62, 62))
+    # SOL ÜST: SON DAKİKA ROZETİ (DİNAMİK BOYUT)
+    badge_text = "SON DAKİKA"
+    badge_bbox = draw.textbbox((0, 0), badge_text, font=font_badge)
+    text_w = badge_bbox[2] - badge_bbox[0]
+    text_h = badge_bbox[3] - badge_bbox[1]
+    
+    badge_w = text_w + 44
+    badge_h = text_h + 28
+    badge_x, badge_y = 50, 50
+    
+    draw.rectangle([badge_x, badge_y, badge_x + badge_w, badge_y + badge_h], fill=(220, 38, 38))
+    draw.text((badge_x + 22, badge_y + 14), badge_text, font=font_badge, fill=(255, 255, 255))
 
-    draw.text((W - 320, 55), tarih_str, font=font_small, fill=(226, 232, 240))
-    draw.line([(50, 115), (W - 50, 115)], fill=(229, 62, 62), width=3)
+    max_text_width = W - 100 
+    title_lines = metin_sardir(haber['title'], font_title, max_text_width - 40, draw)
+    sub_lines = metin_sardir(haber['summary'], font_desc, max_text_width - 40, draw)
 
-    start_y = 135
-    box_height = 275
+    box_padding_y = 40
+    line_height_title = 52
+    line_height_desc = 36
+    
+    total_text_h = box_padding_y + 35 + (len(title_lines) * line_height_title) + 15 + (len(sub_lines) * line_height_desc) + box_padding_y
+    
+    box_x = 50
+    box_w = W - 100
+    box_y = H - total_text_h - 110 
 
-    for idx, h in enumerate(haberler, 1):
-        y = start_y + (idx - 1) * box_height
-        
-        cat_text = f"#{idx}  {h['category']}"
-        draw.text((50, y), cat_text, font=font_cat_bold, fill=(49, 130, 206))
+    shape_layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    shape_draw = ImageDraw.Draw(shape_layer)
+    shape_draw.rectangle([box_x, box_y, box_x + box_w, box_y + 6], fill=(220, 38, 38, 255))
+    shape_draw.rectangle([box_x, box_y + 6, box_x + box_w, box_y + total_text_h], fill=(15, 23, 42, 235))
+    
+    bg_img = Image.alpha_composite(bg_img.convert("RGBA"), shape_layer).convert("RGB")
+    draw = ImageDraw.Draw(bg_img)
 
-        title_lines = metin_sardir(h['title'], font_title_bold, W - 100, draw)[:2]
-        curr_y = y + 38
-        for line in title_lines:
-            draw.text((50, curr_y), line, font=font_title_bold, fill=(255, 255, 255))
-            curr_y += 38
+    curr_y = box_y + box_padding_y
+    
+    draw.text((box_x + 30, curr_y), haber['category'].upper(), font=font_sub, fill=(239, 68, 68))
+    curr_y += 35
 
-        summary_lines = metin_sardir(h['summary'], font_body, W - 100, draw)[:3]
-        curr_y += 6
-        for line in summary_lines:
-            draw.text((50, curr_y), line, font=font_body, fill=(160, 174, 192))
-            curr_y += 30
+    for line in title_lines:
+        draw.text((box_x + 30, curr_y), line, font=font_title, fill=(255, 255, 255))
+        curr_y += line_height_title
 
-        if idx < 4:
-            draw.line([(50, y + box_height - 10), (W - 50, y + box_height - 10)], fill=(26, 32, 44), width=2)
+    curr_y += 10
 
-    footer_y = H - 85
-    draw.line([(50, footer_y), (W - 50, footer_y)], fill=(26, 32, 44), width=2)
+    for line in sub_lines:
+        draw.text((box_x + 30, curr_y), line, font=font_desc, fill=(203, 213, 225))
+        curr_y += line_height_desc
 
-    draw.text((50, footer_y + 25), "🌐 SAATLIKTURKIYE.COM", font=font_small, fill=(255, 255, 255))
-    draw.text((W - 380, footer_y + 25), "📢 Telegram: @saatlikturkiye", font=font_small, fill=(49, 130, 206))
+    footer_y = H - 80
+    draw.rectangle([0, footer_y, W, H], fill=(10, 15, 25))
+    draw.text((50, footer_y + 26), "SAATLİK TÜRKİYE", font=font_footer, fill=(255, 255, 255))
+    draw.text((W - 270, footer_y + 26), "detaylar bio'da 👆", font=font_footer, fill=(239, 68, 68))
 
-    out_path = "bulten.png"
-    img.save(out_path)
-    print("🎨 Bülten kartı çizildi!")
+    out_path = "tekli_haber.png"
+    bg_img.save(out_path)
     return out_path
 
-
-def bulten_reels_videosu_yap(gorsel_yolu):
+def video_yap(gorsel_yolu):
     try:
-        reels_bg_path = "bulten_reels_frame.png"
-        video_out_path = "bulten_reels.mp4"
+        reels_bg_path = "reels_frame.png"
+        video_out_path = "tekli_reels.mp4"
         audio_path = "news_bg.mp3"
 
         reels_w, reels_h = 1080, 1920
         bg_img = Image.new("RGB", (reels_w, reels_h), color=(7, 8, 10))
-
         bulten_img = Image.open(gorsel_yolu)
         offset_y = (reels_h - bulten_img.height) // 2
         bg_img.paste(bulten_img, (0, offset_y))
         bg_img.save(reels_bg_path)
 
-        # MoviePy v2.x uyumlu süre tanımlaması
         clip = ImageClip(reels_bg_path, duration=10)
-
         if os.path.exists(audio_path):
-            # v2.x sürümünde subclip yerine subclipped kullanılmaktadır
             audio = AudioFileClip(audio_path).subclipped(0, 10)
             clip = clip.with_audio(audio)
 
-        clip.write_videofile(
-            video_out_path, 
-            fps=24, 
-            codec="libx264", 
-            audio_codec="aac", 
-            logger=None
-        )
-        print("🎥 Reels videosu (MP4) başarıyla üretildi!")
+        clip.write_videofile(video_out_path, fps=24, codec="libx264", audio_codec="aac", logger=None)
         return video_out_path
     except Exception as e:
-        print(f"❌ Reels video üretme hatası: {e}")
-        return None
-    try:
-        reels_bg_path = "bulten_reels_frame.png"
-        video_out_path = "bulten_reels.mp4"
-        audio_path = "news_bg.mp3"
-
-        reels_w, reels_h = 1080, 1920
-        bg_img = Image.new("RGB", (reels_w, reels_h), color=(7, 8, 10))
-
-        bulten_img = Image.open(gorsel_yolu)
-        offset_y = (reels_h - bulten_img.height) // 2
-        bg_img.paste(bulten_img, (0, offset_y))
-        bg_img.save(reels_bg_path)
-
-        # MoviePy v2.x uyumlu süre ve ses tanımlaması
-        clip = ImageClip(reels_bg_path, duration=10)
-
-        if os.path.exists(audio_path):
-            audio = AudioFileClip(audio_path).subclip(0, 10)
-            clip = clip.with_audio(audio)
-
-        clip.write_videofile(
-            video_out_path, 
-            fps=24, 
-            codec="libx264", 
-            audio_codec="aac", 
-            logger=None
-        )
-        print("🎥 Reels videosu (MP4) başarıyla üretildi!")
-        return video_out_path
-    except Exception as e:
-        print(f"❌ Reels video üretme hatası: {e}")
-        return None
-    try:
-        reels_bg_path = "bulten_reels_frame.png"
-        video_out_path = "bulten_reels.mp4"
-        audio_path = "news_bg.mp3"
-
-        reels_w, reels_h = 1080, 1920
-        bg_img = Image.new("RGB", (reels_w, reels_h), color=(7, 8, 10))
-
-        bulten_img = Image.open(gorsel_yolu)
-        offset_y = (reels_h - bulten_img.height) // 2
-        bg_img.paste(bulten_img, (0, offset_y))
-        bg_img.save(reels_bg_path)
-
-        clip = ImageClip(reels_bg_path).set_duration(10)
-
-        if os.path.exists(audio_path):
-            audio = AudioFileClip(audio_path).subclip(0, 10)
-            clip = clip.set_audio(audio)
-
-        clip.write_videofile(
-            video_out_path, 
-            fps=24, 
-            codec="libx264", 
-            audio_codec="aac", 
-            logger=None
-        )
-        print("🎥 Reels videosu (MP4) başarıyla üretildi!")
-        return video_out_path
-    except Exception as e:
-        print(f"❌ Reels video üretme hatası: {e}")
+        print(f"❌ Video hata: {e}")
         return None
 
-
-# ---------------------------------------------------------
-# 3. SOSYAL MEDYA GÖNDERİM
-# ---------------------------------------------------------
-
-def telegrama_gorsel_at(gorsel_yolu):
-    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-        return
-    caption_text = "🚨 **SAATLİK TÜRKİYE ÖNE ÇIKANLAR**\n\n🔗 Tüm haberlerin detayları sitemizde:\nhttps://saatlikturkiye.com"
+def telegrama_gonder(gorsel_yolu, haber):
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID: return
+    caption = (
+        f"🚨 **SON DAKİKA | {haber['category']}**\n\n"
+        f"📌 **{haber['title']}**\n\n"
+        f"✍️ {haber['summary']}\n\n"
+        f"🔗 **Detaylar:** {haber['sourceUrl']}\n"
+        f"🌐 https://saatlikturkiye.com"
+    )
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendPhoto"
     try:
-        with open(gorsel_yolu, "rb") as photo_file:
-            requests.post(url, data={"chat_id": TELEGRAM_CHAT_ID, "caption": caption_text, "parse_mode": "Markdown"}, files={"photo": photo_file}, timeout=15)
-            print("✈️ Tasarımlı kart Telegram'a gönderildi!")
+        with open(gorsel_yolu, "rb") as p:
+            requests.post(url, data={"chat_id": TELEGRAM_CHAT_ID, "caption": caption, "parse_mode": "Markdown"}, files={"photo": p}, timeout=15)
+            print("✈️ Telegram'a gönderildi!")
     except Exception as e:
-        print(f"❌ Telegram Hatası: {e}")
+        print(f"❌ Telegram hata: {e}")
 
-
-def instagrama_reels_at(video_yolu):
-    if not INSTAGRAM_SESSION_ID:
-        return
+def instagrama_gonder(video_yolu, haber):
+    if not INSTAGRAM_SESSION_ID: return
     try:
         from instagrapi import Client
         cl = Client()
         cl.login_by_sessionid(INSTAGRAM_SESSION_ID)
-
-        caption_text = f"🚨 SAATLİK TÜRKİYE | ÖNE ÇIKANLAR\n\n📌 Saat başı öne çıkan başlıklar ve gündem detayları sitemizde!\n🔗 Detaylar için profildeki linke tıklayın: https://saatlikturkiye.com\n\n{HASHTAGS}"
-        cl.clip_upload(video_yolu, caption=caption_text)
-        print("📸 Reels videosu Instagram'a başarıyla yüklendi!")
+        caption = (
+            f"🚨 {haber['title']}\n\n"
+            f"{haber['summary']}\n\n"
+            f"🤔 Bu gelişme hakkında ne düşünüyorsunuz? Yorumlarda buluşalım! 👇\n\n"
+            f"📌 En taze son dakika haberleri için takip etmeyi unutmayın! 🔔\n"
+            f"🔗 Detaylar: {haber['sourceUrl']}\n\n"
+            f"{HASHTAGS}"
+        )
+        cl.clip_upload(video_yolu, caption=caption)
+        print("📸 Instagram'a yüklendi!")
     except Exception as e:
-        print(f"⚠️ Instagram Reels yükleme hatası: {e}")
+        print(f"⚠️ Instagram hata: {e}")
 
-
-# ---------------------------------------------------------
-# 4. AI ÖZET VE ANA AKIŞ
-# ---------------------------------------------------------
-
-def groq_ile_ozetle(ham_haberler):
-    if not GROQ_API_KEY:
-        print("❌ HATA: GROQ_API_KEY bulunamadı!")
-        return None
-
-    haber_listesi_prompt = [
-        {"orijinal_id": idx, "baslik": h['orijinal_baslik']}
-        for idx, h in enumerate(ham_haberler)
-    ]
-
+def groq_ile_tek_haber_sec(ham_haberler):
+    if not GROQ_API_KEY: return None
+    list_prompt = [{"id": i, "baslik": h['orijinal_baslik']} for i, h in enumerate(ham_haberler)]
     prompt = f"""
-    Aşağıdaki haber listesini incele. En önemli ve ilgi çekici 4 haberi seç.
-    Seçtiğin haberleri Türkçe olarak yeniden özgünleştir.
+    Aşağıdaki en taze ve güncel haberler arasından **en flaş, en çok tık getirecek ve en önemli 1 tanesini** seç. Eski veya sıradan haberleri kesinlikle seçme.
+    
+    KURALLAR:
+    1. "orijinal_id": Seçtiğin haberin id numarası.
+    2. "baslik": Sosyal medyada parmak durduracak çok vurucu son dakika başlığı (6-9 kelime).
+    3. "kisa_aciklama": KESİNLİKLE TAM 2 CÜMLE. Olayı özetle ve merak uyandır.
+    4. "kategori": SON DAKİKA / GÜNDEM / EKONOMİ vb.
 
-    ÖNEMLİ KURALLAR:
-    1. "orijinal_id": Seçtiğin haberin aşağıdaki listedeki "orijinal_id" numarasını AYNEN YAZMALISIN.
-    2. "baslik": Haber başlığı çarpıcı ve net olmalı (6-10 kelime).
-    3. "kisa_aciklama": HER HABER İÇİN KESİNLİKLE VE İSTİSNASIZ TAM 2 CÜMLE YAZACAKSIN.
-    4. "kategori": GÜNDEM / İÇ HABERLER / SUÇ / TRAFİK / EKONOMİ / DÜNYA / TEKNOLOJİ kategorilerinden biri olmalı.
-    5. TEKİLLEŞTİRME: Seçtiğin 4 haberin konusu BİRBİRİNDEN TAMAMEN FARKLI olmalıdır.
-
-    İstenen JSON Yapısı:
+    JSON Formatı:
     {{
-      "maddeler": [
-        {{
-          "id": 1,
-          "orijinal_id": 0,
-          "baslik": "Dikkat çekici haber başlığı",
-          "kisa_aciklama": "Olayı anlatan birinci cümle. Detay veren ikinci cümle.",
-          "detay": "Haberin detaylı açıklaması",
-          "kategori": "GÜNDEM"
-        }}
-      ]
+      "baslik": "...",
+      "kisa_aciklama": "...",
+      "kategori": "...",
+      "orijinal_id": 0
     }}
-
-    Haber Listesi:
-    {json.dumps(haber_listesi_prompt, ensure_ascii=False)}
+    Haberler: {json.dumps(list_prompt, ensure_ascii=False)}
     """
-
     url = "https://api.groq.com/openai/v1/chat/completions"
     headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
     payload = {
         "model": "llama-3.3-70b-versatile",
-        "messages": [
-            {"role": "system", "content": "You are a senior Turkish news editor. Always return valid JSON containing 'maddeler' array."},
-            {"role": "user", "content": prompt}
-        ],
+        "messages": [{"role": "system", "content": "Return valid JSON."}, {"role": "user", "content": prompt}],
         "response_format": {"type": "json_object"},
         "temperature": 0.2
     }
-
     try:
-        response = requests.post(url, headers=headers, json=payload, timeout=25)
-        if response.status_code == 200:
-            clean_json = response.json()['choices'][0]['message']['content']
-            parsed_data = json.loads(clean_json)
-            
-            if isinstance(parsed_data, dict):
-                items = parsed_data.get("maddeler") or parsed_data.get("news") or parsed_data.get("haberler")
-                if not items and len(parsed_data.values()) > 0:
-                    first_val = list(parsed_data.values())[0]
-                    if isinstance(first_val, list):
-                        items = first_val
-                return items
-            elif isinstance(parsed_data, list):
-                return parsed_data
-        else:
-            print(f"❌ Groq API Hatası: {response.status_code}")
-    except Exception as e:
-        print(f"❌ Groq İşleme Hatası: {e}")
-
+        resp = requests.post(url, headers=headers, json=payload, timeout=20)
+        if resp.status_code == 200:
+            return json.loads(resp.json()['choices'][0]['message']['content'])
+    except Exception:
+        pass
     return None
 
-
-def haberleri_islemden_gecir():
-    print(f"\n--------------------------------------------------")
-    print(f"⏰ Güncelleme Başladı: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}")
-    
-    # 1. ÖNCEDEN PAYLAŞILMIŞ HABERLERİN LİNKLERİNİ YÜKLE (TEKRARI ÖNLEMEK İÇİN)
-    mevcut_haberler = []
-    paylasilan_linkler = set()
+def calistir():
+    print(f"\n--- Tarama ve Paylaşım Başladı: {datetime.now().strftime('%d.%m.%Y - %H:%M:%S')} ---")
+    mevcut = []
+    paylasilanlar = set()
     if os.path.exists(NEWS_JSON_PATH):
         try:
             with open(NEWS_JSON_PATH, "r", encoding="utf-8") as f:
-                mevcut_haberler = json.load(f)
-                # Daha önce paylaşılan haberlerin linklerini sete ekle
-                paylasilan_linkler = {h.get("sourceUrl") for h in mevcut_haberler if "sourceUrl" in h}
+                mevcut = json.load(f)
+                paylasilanlar = {h.get("sourceUrl") for h in mevcut if "sourceUrl" in h}
         except Exception:
-            mevcut_haberler = []
+            pass
 
-    print("🔄 RSS akışları taranıyor...")
-    ham_haberler = []
-
-    for feed_url in RSS_FEEDS:
-        try:
-            parsed = feedparser.parse(feed_url)
-            for entry in parsed.entries[:8]: # Havuzu biraz genişlettik (ilk 8 haber)
-                baslik = entry.get("title", "").strip()
-                link = entry.get("link", "").strip()
-                
-                if not baslik or not link:
-                    continue
-
-                # EĞER BU HABER DAHA ÖNCE PAYLAŞILDDIYSA ATLA!
-                if link in paylasilan_linkler:
-                    continue
-
-                # Benzer başlık kontrolü (Farklı kaynaklar aynı haberi farklı başlıkla verdiyse)
-                zaten_var = False
-                for h in ham_haberler:
-                    benzerlik = SequenceMatcher(None, baslik.lower(), h["orijinal_baslik"].lower()).ratio()
-                    if benzerlik > 0.50:
-                        zaten_var = True
-                        break
-                
-                if zaten_var:
-                    continue
-
-                ham_haberler.append({
-                    "orijinal_baslik": baslik,
-                    "ozet": entry.get("summary", ""),
-                    "link": link,
-                    "gorsel_url": gorsel_url_bul(entry),
-                    "kaynak": parsed.feed.get("title", "Haber Kaynağı")
-                })
-        except Exception as e:
-            print(f"⚠️ RSS hatası ({feed_url}): {e}")
-
-    if not ham_haberler:
-        print("❌ Yeni ve taze haber bulunamadı (Tüm haberler daha önce paylaşılmış). Bu tur pas geçiliyor.")
-        return
-
-    print(f" Toplam {len(ham_haberler)} yeni ve benzersiz haber toplandı. Groq AI ile işleniyor...")
-
-    ai_data = groq_ile_ozetle(ham_haberler)
-    if not ai_data:
-        print("❌ AI aşaması başarısız olduğu için bu tur pas geçiliyor.")
-        return
-
-    simdi = datetime.now()
-    simdi_str = simdi.strftime("%d.%m.%Y - %H:%M")
-    tarih_kart_str = simdi.strftime("%d.%m.%Y | %H:%M")
+    ham = []
+    simdi_utc = datetime.now(timezone.utc)
     
-    yeni_eklenenler = []
+    for url in RSS_FEEDS:
+        try:
+            parsed = feedparser.parse(url)
+            for entry in parsed.entries[:12]:
+                b = entry.get("title", "").strip()
+                l = entry.get("link", "").strip()
+                if not b or not l or l in paylasilanlar: continue
+                
+                pub_time = entry.get("published_parsed") or entry.get("updated_parsed")
+                if pub_time:
+                    haber_tarihi = datetime.fromtimestamp(time.mktime(pub_time), tz=timezone.utc)
+                    if simdi_utc - haber_tarihi > timedelta(hours=12):
+                        continue
 
-    for item in ai_data:
-        orig_id = item.get("orijinal_id")
-        if orig_id is not None and isinstance(orig_id, int) and 0 <= orig_id < len(ham_haberler):
-            best_match = ham_haberler[orig_id]
-        else:
-            best_match = ham_haberler[0]
+                if any(SequenceMatcher(None, b.lower(), h["orijinal_baslik"].lower()).ratio() > 0.5 for h in ham): continue
+                
+                ham.append({
+                    "orijinal_baslik": b,
+                    "link": l,
+                    "gorsel_url": gorsel_url_bul(entry),
+                    "kaynak": parsed.feed.get("title", "Son Dakika")
+                })
+        except Exception:
+            pass
 
-        temiz_kategori = kategori_duzelt(item.get("kategori"))
+    if not ham:
+        print("❌ Son 12 saate ait yeni ve taze haber bulunamadı.")
+        return
 
-        yeni_haber = {
-            "id": f"{int(time.time())}_{item.get('id', 1)}",
-            "category": temiz_kategori,
-            "title": item.get("baslik"),
-            "summary": item.get("kisa_aciklama"),
-            "fullText": item.get("detay"),
-            "imageUrl": best_match.get("gorsel_url", ""),
-            "source": best_match["kaynak"],
-            "sourceUrl": best_match["link"],
-            "date": simdi_str
-        }
-        yeni_eklenenler.append(yeni_haber)
+    secilen_ai = groq_ile_tek_haber_sec(ham)
+    if not secilen_ai:
+        print("❌ AI seçimi başarısız.")
+        return
 
-    # Toplam haberleri birleştir (En yeni eklenenler en başta yer alır)
-    toplam_haberler = yeni_eklenenler + mevcut_haberler
-    toplam_haberler = toplam_haberler[:100]  # Sitede en fazla 100 haber tutulur
+    orig_id = secilen_ai.get("orijinal_id", 0)
+    best_match = ham[orig_id] if 0 <= orig_id < len(ham) else ham[0]
 
+    simdi_str = datetime.now().strftime("%d.%m.%Y - %H:%M")
+    yeni_haber = {
+        "id": f"{int(time.time())}",
+        "category": kategori_duzelt(secilen_ai.get("kategori")),
+        "title": secilen_ai.get("baslik"),
+        "summary": secilen_ai.get("kisa_aciklama"),
+        "imageUrl": best_match.get("gorsel_url", ""),
+        "source": best_match["kaynak"],
+        "sourceUrl": best_match["link"],
+        "date": simdi_str
+    }
+
+    toplam = ([yeni_haber] + mevcut)[:100]
     os.makedirs(os.path.dirname(NEWS_JSON_PATH), exist_ok=True)
     with open(NEWS_JSON_PATH, "w", encoding="utf-8") as f:
-        json.dump(toplam_haberler, f, ensure_ascii=False, indent=2)
-
-    print(f"✅ 'news.json' güncellendi. Toplam {len(toplam_haberler)} haber veritabanında saklanıyor.")
+        json.dump(toplam, f, ensure_ascii=False, indent=2)
 
     git_push_degisiklikleri()
 
-    gorsel_dosyasi = bulten_gorseli_ciz(yeni_eklenenler, tarih_kart_str)
-    video_dosyasi = bulten_reels_videosu_yap(gorsel_dosyasi)
+    gorsel_yolu = tekli_haber_gorseli_ciz(yeni_haber)
+    video_yolu = video_yap(gorsel_yolu)
 
-    if gorsel_dosyasi and os.path.exists(gorsel_dosyasi):
-        telegrama_gorsel_at(gorsel_dosyasi)
+    if gorsel_yolu and os.path.exists(gorsel_yolu):
+        telegrama_gonder(gorsel_yolu, yeni_haber)
 
-    if video_dosyasi and os.path.exists(video_dosyasi):
-        instagrama_reels_at(video_dosyasi)
+    if video_yolu and os.path.exists(video_yolu):
+        instagrama_gonder(video_yolu, yeni_haber)
 
-    print(f"🎉 Saatlik tur başarıyla tamamlandı!")
-    print(f"\n--------------------------------------------------")
-    print(f"⏰ Güncelleme Başladı: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}")
-    print("🔄 RSS akışları taranıyor...")
-    ham_haberler = []
-
-    for feed_url in RSS_FEEDS:
-        try:
-            parsed = feedparser.parse(feed_url)
-            for entry in parsed.entries[:6]:
-                baslik = entry.get("title", "").strip()
-                if not baslik:
-                    continue
-
-                zaten_var = False
-                for h in ham_haberler:
-                    benzerlik = SequenceMatcher(None, baslik.lower(), h["orijinal_baslik"].lower()).ratio()
-                    if benzerlik > 0.50:
-                        zaten_var = True
-                        break
-                
-                if zaten_var:
-                    continue
-
-                ham_haberler.append({
-                    "orijinal_baslik": baslik,
-                    "ozet": entry.get("summary", ""),
-                    "link": entry.get("link", ""),
-                    "gorsel_url": gorsel_url_bul(entry),
-                    "kaynak": parsed.feed.get("title", "Haber Kaynağı")
-                })
-        except Exception as e:
-            print(f"⚠️ RSS hatası ({feed_url}): {e}")
-
-    if not ham_haberler:
-        print("❌ Hiç haber çekilemedi.")
-        return
-
-    print(f" Toplam {len(ham_haberler)} benzersiz haber toplandı. Groq AI ile işleniyor...")
-
-    ai_data = groq_ile_ozetle(ham_haberler)
-    if not ai_data:
-        print("❌ AI aşaması başarısız olduğu için bu tur pas geçiliyor.")
-        return
-
-    mevcut_haberler = []
-    if os.path.exists(NEWS_JSON_PATH):
-        try:
-            with open(NEWS_JSON_PATH, "r", encoding="utf-8") as f:
-                mevcut_haberler = json.load(f)
-        except Exception:
-            mevcut_haberler = []
-
-    simdi = datetime.now()
-    simdi_str = simdi.strftime("%d.%m.%Y - %H:%M")
-    tarih_kart_str = simdi.strftime("%d.%m.%Y | %H:%M")
-    
-    yeni_eklenenler = []
-
-    for item in ai_data:
-        orig_id = item.get("orijinal_id")
-        if orig_id is not None and isinstance(orig_id, int) and 0 <= orig_id < len(ham_haberler):
-            best_match = ham_haberler[orig_id]
-        else:
-            best_match = ham_haberler[0]
-
-        temiz_kategori = kategori_duzelt(item.get("kategori"))
-
-        yeni_haber = {
-            "id": f"{int(time.time())}_{item.get('id', 1)}",
-            "category": temiz_kategori,
-            "title": item.get("baslik"),
-            "summary": item.get("kisa_aciklama"),
-            "fullText": item.get("detay"),
-            "imageUrl": best_match.get("gorsel_url", ""),
-            "source": best_match["kaynak"],
-            "sourceUrl": best_match["link"],
-            "date": simdi_str
-        }
-        yeni_eklenenler.append(yeni_haber)
-
-    toplam_haberler = yeni_eklenenler + mevcut_haberler
-    toplam_haberler = toplam_haberler[:100]  # Sitede en fazla 100 haber tutulur
-
-    os.makedirs(os.path.dirname(NEWS_JSON_PATH), exist_ok=True)
-    with open(NEWS_JSON_PATH, "w", encoding="utf-8") as f:
-        json.dump(toplam_haberler, f, ensure_ascii=False, indent=2)
-
-    print(f"✅ 'news.json' güncellendi. Toplam {len(toplam_haberler)} haber veritabanında saklanıyor.")
-
-    git_push_degisiklikleri()
-
-    gorsel_dosyasi = bulten_gorseli_ciz(yeni_eklenenler, tarih_kart_str)
-    video_dosyasi = bulten_reels_videosu_yap(gorsel_dosyasi)
-
-    if gorsel_dosyasi and os.path.exists(gorsel_dosyasi):
-        telegrama_gorsel_at(gorsel_dosyasi)
-
-    if video_dosyasi and os.path.exists(video_dosyasi):
-        instagrama_reels_at(video_dosyasi)
-
-    print(f"🎉 Saatlik tur başarıyla tamamlandı!")
-
-
-# ---------------------------------------------------------
-# 5. OTOMATİK SAATLİK DÖNGÜ (WHILE LOOP)
-# ---------------------------------------------------------
+    print("🎉 Tur başarıyla tamamlandı ve Instagram/Telegram'a gönderildi!")
 
 if __name__ == "__main__":
-    print("🚀 Saatlik Türkiye Otomasyon Botu Başlatıldı!")
-    print("📌 Bot her 60 dakikada bir otomatik çalışacaktır. Kapatmak için CTRL+C yapabilirsin.\n")
+    print("🚀 Prime-Time Saatli Flaş Haber Botu Aktif (Günde 4 Paylaşım)!")
     
+    # En yüksek etkileşimli hedef saatler (Türkiye Saati ile)
+    # 1. 08:00 -> Sabah İşe Gidiş / Toplu Taşıma
+    # 2. 13:00 -> Öğle Arası
+    # 3. 19:00 -> Akşam Eve Dönüş / Prime-Time Başlangıcı
+    # 4. 21:30 -> Gece Kuşağı Yüksek Trafik
+    HEDEF_SAATLER = [(8, 0), (13, 0), (19, 0), (21, 30)]
+    son_calisilan_gun_saat = ""
+
     while True:
-        try:
-            haberleri_islemden_gecir()
-        except Exception as e:
-            print(f"❌ Ana döngü hatası oluştu: {e}")
+        simdi = datetime.now()
+        bugun_str = simdi.strftime("%Y-%m-%d")
+        simdi_saat = simdi.hour
+        simdi_dakika = simdi.minute
+
+        for saat, dakika in HEDEF_SAATLER:
+            # Hedef saate gelindiyse ve bu saat dilimi için bugün henüz çalışmadıysa
+            benzersiz_anahtar = f"{bugun_str}-{saat:02d}:{dakika:02d}"
+            
+            if simdi_saat == saat and abs(simdi_dakika - dakika) <= 3 and son_calisilan_gun_saat != benzersiz_anahtar:
+                try:
+                    calistir()
+                    son_calisilan_gun_saat = benzersiz_anahtar
+                except Exception as e:
+                    print(f"Döngü hatası: {e}")
         
-        print("⏳ Bir sonraki güncelleme için 1 saat (3600 sn) bekleniyor...")
-        time.sleep(3600)
+        # Her 2 dakikada bir saati kontrol et
+        time.sleep(120)
