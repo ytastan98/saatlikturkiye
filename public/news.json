@@ -1,5 +1,49 @@
 [
   {
+    "id": "1786346101_1",
+    "category": "İÇ HABERLER",
+    "title": "Malatya'da İmza Skandalı: 4 Çocuk Sokakta Kaldı",
+    "summary": "Malatya'da bir vatandaş, elektrik aboneliği için amcasına imza verdi. Ancak bu durum, ailenin sokakta kalmasına neden oldu. Şimdi ise vatandaş, bu durumun sorumlusunun kim olduğu konusunda soru işaretleri oluştu.",
+    "fullText": "Malatya'da yaşanan bu skandal, elektrik aboneliği için imza verilmesinin sonuçlarını gösteriyor. Vatandaşın 4 çocuğu ile sokakta kalması, toplumda büyük yankı uyandırdı.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/10/6a797886e10c7633.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/malatyada-elektrik-aboneligi-icin-amcasina-imza-verdi-4-cocuguyla-sokakta-kaldi-h1556336",
+    "date": "10.08.2026 - 10:15"
+  },
+  {
+    "id": "1786346101_2",
+    "category": "DÜNYA",
+    "title": "Hindistan'da Seller: Can Kaybı 100'e Yükseldi",
+    "summary": "Hindistan'da yaşanan seller, büyük bir yıkıma neden oldu. Sellerde can kaybı 100'e yükselirken, birçok insan da evsiz kaldı. Yardım ekipleri, bölgede çalışmalarını sürdürüyor.",
+    "fullText": "Hindistan'da seller, ülkenin birçok bölgesini etkiledi. Sellerin neden olduğu can kaybı ve maddi hasar, büyük bir sorun olarak görülüyor.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/10/6a7977927c71a651.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/hindistandaki-sellerde-can-kaybi-100e-yukseldi-h1556331",
+    "date": "10.08.2026 - 10:15"
+  },
+  {
+    "id": "1786346101_3",
+    "category": "EKONOMİ",
+    "title": "En Yüksek Reel Getiri Mevduat Faizinden Geldi",
+    "summary": "Ekonomi alanında yaşanan gelişmeler, yatırımcıları etkiliyor. Aylık en yüksek reel getiri, mevduat faizinden geldi. Bu durum, yatırımcıların tercihlerini değiştirebilir.",
+    "fullText": "Ekonomide yaşanan dalgalanmalar, yatırımcıların tercihlerini etkiliyor. Mevduat faizinin en yüksek reel getiri olması, yatırımcıları mevduata yönlendirebilir.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/10/6a797876e7817814.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/aylik-en-yuksek-reel-getiri-mevduat-faizinden-geldi-h1556333",
+    "date": "10.08.2026 - 10:15"
+  },
+  {
+    "id": "1786346101_4",
+    "category": "TRAFİK",
+    "title": "Tır Devrildi: İş Makinesi Parçaları Yola Saçıldı",
+    "summary": "Bir tır, yol üzerinde devrildi. Bu durum, iş makinesi parçalarının yola saçılmasına neden oldu. Trafikte büyük bir karışıklık oluştu.",
+    "fullText": "Tırın devrilmesi, trafikte büyük bir sorun olarak görülüyor. İş makinesi parçalarının yola saçılması, diğer sürücüler için büyük bir tehlike oluşturuyor.",
+    "imageUrl": "https://trthaberstatic.cdn.wp.trt.com.tr/resimler/2480000/tir-kaza-iha-2480798.jpg",
+    "source": "TRT Haber Son Dakika Haberler",
+    "sourceUrl": "https://www.trthaber.com/haber/turkiye/tir-devrildi-is-makinesi-parcalari-yola-sacildi-953518.html",
+    "date": "10.08.2026 - 10:15"
+  },
+  {
     "id": "1786342456_1",
     "category": "SUÇ",
     "title": "Kütahya'da Korkutan Kundaklama Girişimi",
