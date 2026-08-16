@@ -1,5 +1,15 @@
 [
   {
+    "id": "1786904862",
+    "category": "SPOR",
+    "title": "Defne Kurt Avrupa şampiyonu oldu",
+    "summary": "Defne Kurt, Fransa'da düzenlenen Avrupa şampiyonalarında altın madalya kazandı. Bu başarısı ile Türkiye'ye önemli bir madalya kazandırdı.",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/16/6a81ff53c1c28470.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/defne-kurt-fransada-avrupa-sampiyonu-oldu-h1558133",
+    "date": "16.08.2026 - 21:27"
+  },
+  {
     "id": "1786903215",
     "category": "DÜNYA",
     "title": "Katil İsrail Gazze Şeridi'ne saldırdı",
@@ -1036,16 +1046,5 @@
     "source": "Anadolu Ajansı Güncel Haberler",
     "sourceUrl": "https://www.aa.com.tr/tr/gundem/selcuk-bayraktar-adeta-teknoloji-iklimi-guneydogudan-esecek/4022675",
     "date": "10.08.2026 - 02:09"
-  },
-  {
-    "id": "1786313315_1",
-    "category": "SUÇ",
-    "title": "Antalya'da Galeri Kundaklandı!",
-    "summary": "Antalya'da bir galeri kundaklandı. Olayda şüpheli kaçarken yakalandı. ",
-    "fullText": "Antalya'da bir galerinin kundaklanması sonucu yangın çıktı. Yangın kısa sürede söndürüldü.",
-    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/10/6a78eb503fd44451.jpg?w=1200&h=675",
-    "source": "Ensonhaber",
-    "sourceUrl": "https://www.ensonhaber.com/antalyada-galeri-kundaklandi-supheli-kacarken-yakalandi-h1556233",
-    "date": "10.08.2026 - 01:08"
   }
 ]
