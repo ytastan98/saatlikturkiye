@@ -1,5 +1,16 @@
 [
   {
+    "id": "1787569258",
+    "category": "GÜNDEM",
+    "title": "İzmir Orman Yangını: 200 Metrekare Kayıp",
+    "summary": "İzmir'de bir orman yangını 200 metrekare alanı yok etti. Yangın, erken saatlerde tespit edildi ve ekipler hızla müdahale etti.",
+    "hashtags": "#izmir #orman #yangın #doğalafet",
+    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/24/6a8c22cf88886321.jpg?w=1200&h=675",
+    "source": "Ensonhaber",
+    "sourceUrl": "https://www.ensonhaber.com/izmirde-orman-yangini-68152-h1560188",
+    "date": "24.08.2026 - 14:00"
+  },
+  {
     "id": "1787565683",
     "category": "DÜNYA",
     "title": "Brüksel'de 4 Gün İçinde 4 Silahlı Saldırı",
@@ -1031,17 +1042,6 @@
     "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/10/6a796ae0a295c243.jpg?w=1200&h=675",
     "source": "Ensonhaber",
     "sourceUrl": "https://www.ensonhaber.com/kutahyada-kundaklama-suphelisi-korsan-takside-yakalandi-h1556292",
-    "date": "10.08.2026 - 09:14"
-  },
-  {
-    "id": "1786342456_2",
-    "category": "EKONOMİ",
-    "title": "İngiltere'den Sıfır Emisyonlu Araçlara Büyük Destek",
-    "summary": "İngiltere, sıfır emisyonlu araçlara 175 milyon dolarlık destek sağlayacak. Bu destek, çevre dostu ulaşımın teşvik edilmesi amacıyla veriliyor.",
-    "fullText": "İngiltere hükümeti, sıfır emisyonlu araçların yaygınlaştırılması için önemli bir adım attı. 175 milyon dolarlık destek, bu araçların üretim ve satın alma süreçlerini teşvik etmeyi amaçlıyor.",
-    "imageUrl": "https://imgcdn.ensonhaber.com/media/esh/2026/08/10/6a7967aa35f37508.jpg?w=1200&h=675",
-    "source": "Ensonhaber",
-    "sourceUrl": "https://www.ensonhaber.com/ingiltereden-sifir-emisyonlu-araclara-175-milyon-dolarlik-destek-h1556288",
     "date": "10.08.2026 - 09:14"
   }
 ]
